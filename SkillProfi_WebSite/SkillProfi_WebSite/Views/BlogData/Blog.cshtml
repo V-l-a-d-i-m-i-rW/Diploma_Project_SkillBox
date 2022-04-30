@@ -1,0 +1,34 @@
+﻿@using SkillProfi_Shared
+@model Blog
+@{
+    ViewData["Title"] = Model.Header;
+    if (User.Identity.IsAuthenticated && User.IsInRole("administrator"))
+        Layout = "_Layout_Admin";
+    else
+        Layout = "_Layout_General";
+}
+<div class="container">
+    <div class="card mb-3" style="border:hidden;">
+        <div class="card-header-0" style="padding: 0.5rem 0rem;">
+            <div class="row">
+                <h1 class="text-primary">@Model.Header</h1>
+            </div>
+        </div>
+    </div>
+    <div class="row text-secondary mb-3 mt-3">
+        @Model.Date.ToString("dd MMMM yyyy")
+    </div>
+    <div class="row">
+        <div class="col-2 mb-3">
+            <img class="card-img-top"
+                 src="@(Model.Image?.Length > 0 ? $"data:image/jpeg;base64,{(Convert.ToBase64String(Model.Image))}":"" )"
+                 alt="@Model.Header">
+        </div>
+        <div class="col-10 mb-3" align="justify">
+            @Html.Raw(Model.Description)
+        </div>
+    </div>
+    <div class="col mb-3 mt-3" align="right" style="right:20%;">
+        <a class="btn btn-primary btn-sm" href="~/BlogData/Blogs">< Назад</a>
+    </div>
+</div>

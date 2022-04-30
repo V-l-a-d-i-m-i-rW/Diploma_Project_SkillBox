@@ -1,0 +1,175 @@
+﻿@using SkillProfi_Shared
+@model SortedBidsData
+@{
+    ViewData["Title"] = "Список заявок";
+    if (User.Identity.IsAuthenticated && User.IsInRole("administrator"))
+        Layout = "_Layout_Admin";
+    else
+        Layout = "_Layout_General";
+
+    string style_th = "table-active";
+    string null_char = "0";
+}
+<div class="container position-relative">
+    <table class="table table-bordered position-center text-center align-middle mb-3 mt-3">
+        <thead>
+            <tr>
+                <th colspan="5" style="text-align: left;">
+                    Всего заявок: @if (Model != null)
+                    {
+                        @Model.AllBidsCount;
+                    }
+                    else
+                    {
+                        @null_char;
+                    }
+                </th>
+            </tr>
+            <tr class="align-middle">
+                @if (ViewData["PressedButton"] != null && ViewData["PressedButton"].ToString().Equals("Today", StringComparison.OrdinalIgnoreCase))
+                {
+                    <th class="table-active">Сегодня</th>
+                }
+                else
+                {
+                    <th><a href="~/BidData/GetBidsToday">Сегодня</a></th>
+                }
+                @if (ViewData["PressedButton"] != null && ViewData["PressedButton"].ToString().Equals("Yesterday", StringComparison.OrdinalIgnoreCase))
+                {
+                    <th class="table-active">Вчера</th>
+                }
+                else
+                {
+                    <th><a href="~/BidData/GetBidsYesterday">Вчера</a></th>
+                }
+                @if (ViewData["PressedButton"] != null && ViewData["PressedButton"].ToString().Equals("Week", StringComparison.OrdinalIgnoreCase))
+                {
+                    <th class="table-active">Неделя</th>
+                }
+                else
+                {
+                    <th><a href="~/BidData/GetBidsWeek">Неделя</a></th>
+                }
+                @if (ViewData["PressedButton"] != null && ViewData["PressedButton"].ToString().Equals("Month", StringComparison.OrdinalIgnoreCase))
+                {
+                    <th class="table-active">Месяц</th>
+                }
+                else
+                {
+                    <th><a href="~/BidData/GetBidsMonth">Месяц</a></th>
+                }
+
+                
+            <th
+                class="
+                @if (ViewData["FromPeriod"] != null)
+                {
+                    @style_th;
+                }
+                else
+                {
+                    @string.Empty;
+                } ">
+                <form method="post" action="~/BidData/GetBidsPeriod"  asp-antiforgery="true" id="addBidForm">
+                    <div class="row align-items-center">
+                        <div class="col">с:</div>
+                        <div class="col">
+                            <input type="date"
+                                   id="withPeriod"
+                                   class="form-control"
+                                   name="fromDate"
+                                   value="@if (ViewData["FromPeriod"] != null)
+                                            {
+                                                @ViewData["FromPeriod"];
+                                            }">
+                        </div>
+                        <div class="col">по:</div>
+                        <div class="col">
+                            <input type="date"
+                                   id="fromPeriod"
+                                   class="form-control"
+                                   name="up_toDate"
+                                   value="@if (ViewData["Up_toPeriod"] != null)
+                                            {
+                                                @ViewData["Up_toPeriod"];
+                                            }">
+                        </div>
+                        <div class="col">
+                            <button class="btn btn-primary btn-sm" id="btnPeriod" type="submit">
+                                обновить
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </th>
+            </tr>
+        </thead>
+    </table>
+    <div class="row align-items-center mb-3 mt-3">
+        <p style="text-align: left;">За указанный период поступило заявок: 
+        @if (Model != null && Model.Bids != null)
+        { 
+            @Model.Bids.Count;
+        }
+        else 
+        { 
+            @null_char; 
+        }
+        </p>
+    </div>
+    <div class="container position-relative">
+        <table class="table table-hover position-center text-center align-middle mb-3 mt-3">
+            <thead>
+                <tr class="align-middle">
+                    <th>Номер заявки</th>
+                    <th>Время заявки</th>
+                    <th>Имя</th>
+                    <th>Текст заявки</th>
+                    <th>Контакты</th>
+                    <th>Статус</th>
+                    <th>Изменить статус</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model?.Bids != null)
+                {
+                    @foreach (SkillProfi_Shared.Bid current_bid in Model.Bids)
+                    {
+                        <tr class="align-middle">
+                            <td>@current_bid.Id</td>
+                            <td>@current_bid.Date.ToString("dd.MM.yyyy HH:mm:ss")</td>
+                            <td>@current_bid.Name</td>
+                            <td style="text-align: left;">@current_bid.Text</td>
+                            <td>@current_bid.UserEmail</td>
+                            <td class="@SkillProfiHelper.BidStatusGetTableClass(current_bid.BidStatus)">
+                                @SkillProfiHelper.BidStatusGetName(current_bid.BidStatus)
+                            </td>
+                            <td>
+                                <a class="btn btn-primary btn-sm" href="~/BidData/EditBidStatus/@current_bid.Id">
+                                    изменить
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+<script>
+    var btn = document.getElementById("btnPeriod");
+    var fromPeriodElement = document.getElementById("fromPeriod");
+    var withPeriodElement = document.getElementById("withPeriod");
+    btn.disabled = true;
+    //подписываемся на событие изменения значения текста
+    fromPeriodElement.addEventListener("change", ActivateBtn, false);
+    withPeriodElement.addEventListener("change", ActivateBtn, false);
+
+    function ActivateBtn()
+    {
+    activateButton([fromPeriodElement.value,withPeriodElement.value], btn);
+    var isValid = withPeriodElement.value<=fromPeriodElement.value;
+    if (!btn.disabled)
+	    btn.disabled = !isValid;
+    }
+</script>

@@ -1,0 +1,48 @@
+﻿@model SkillProfi_WebSite.UserAuthorization.UserRegistration
+
+@{
+    ViewData["Title"] = "Регистрация";
+    Layout = "_Layout_Admin";
+}
+<div class="container position-relative">
+    <div class="row mb-3 mt-3">
+        <h3 class="text-center">Добавление пользователя</h3>
+    </div>
+    <form asp-action="Register" asp-antiforgery="true" class="form" id="registerform">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="form-group mb-3 mt-3">
+            <input type="text" asp-for="LoginUser" id="userLogin" class="form-control form-control-lg " placeholder="Логин" required />
+        </div>
+
+        <div class="form-group mb-3 mt-3">
+            <input type="password" asp-for="Password" id="userPassword" class="form-control  form-control-lg" placeholder="Пароль" required />
+        </div>
+
+        <div class="form-group mb-3 mt-3">
+            <input type="password" asp-for="ConfirmPassword" id="userConfirmPassword" class="form-control form-control-lg" placeholder="Продублируйте пароль" required />
+        </div>
+        <div class="form-group mb-3 mt-3" align="right" style="right:20%;">
+            <button class="btn btn-primary" id="btnSubmint">Добавить</button>
+        </div>
+    </form>
+</div>
+
+    <script>
+        var btn = document.getElementById("btnSubmint");
+        var PasswordElement = document.getElementById("userPassword");
+        var LoginUserElement = document.getElementById("userLogin");
+        var ConfirmPasswordElement = document.getElementById("userConfirmPassword");
+        btn.disabled = true;
+        //подписываемся на событие изменения значения текста
+        PasswordElement.addEventListener("keyup", ActivateBtn, false);
+        LoginUserElement.addEventListener("keyup", ActivateBtn, false);
+        ConfirmPasswordElement.addEventListener("keyup", ActivateBtn, false);
+
+        function ActivateBtn() {
+            activateButton([PasswordElement.value, LoginUserElement.value, ConfirmPasswordElement.value], btn);
+            if (!btn.disabled) {
+                btn.disabled = !(PasswordElement.value === ConfirmPasswordElement.value);
+            }
+        }
+    </script>
+

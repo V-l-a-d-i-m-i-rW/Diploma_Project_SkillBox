@@ -1,0 +1,45 @@
+﻿@model SkillProfi_WebSite.UserAuthorization.UserLogin
+@{
+    ViewData["Title"] = "Login";
+    if (User.Identity.IsAuthenticated && User.IsInRole("administrator"))
+        Layout = "_Layout_Admin";
+    else
+        Layout = "_Layout_General";
+}
+<div class="row mb-3 mt-3">
+    <h3 class="text-center">Вход</h3>
+</div>
+
+<form asp-action="Login" asp-antiforgery="true" id="loginform">
+    <div class="container align-items-center">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <input type="hidden" asp-for="ReturnUrl" />
+
+        <div class="form-group mb-3 mt-3">
+            <input asp-for="LoginUser" id="userLogin" class="form-control form-control-lg" placeholder="Логин" type="text" />
+        </div>
+
+        <div class="form-group mb-3 mt-3">
+            <input type="password" asp-for="Password" id="userPassword" class="form-control form-control-lg" placeholder="Пароль" />
+        </div>
+
+        <div class="form-group mb-3 mt-3">
+            <button type="submit" id="btnSubmint" class="btn btn-primary">Войти</button>
+        </div>
+    </div>
+</form>
+<script>
+    var btn = document.getElementById("btnSubmint");
+    var PasswordElement = document.getElementById("userPassword");
+    var LoginUserElement = document.getElementById("userLogin");
+    btn.disabled = true;
+    //подписываемся на событие изменения значения текста
+    PasswordElement.addEventListener("keyup", ActivateBtn, false);
+    LoginUserElement.addEventListener("keyup", ActivateBtn, false);
+    //PasswordElement.addEventListener("change", ActivateBtn, false);
+    //LoginUserElement.addEventListener("change", ActivateBtn, false);
+
+    function ActivateBtn() {
+        activateButton([PasswordElement.value, LoginUserElement.value], btn);
+    }
+</script>

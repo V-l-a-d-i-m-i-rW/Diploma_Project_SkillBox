@@ -1,0 +1,2432 @@
+﻿<Window x:Class="SkillProfi_WPFClient.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:i="clr-namespace:SkillProfi_WPFClient.Classes"
+        xmlns:gl="clr-namespace:System.Globalization;assembly=mscorlib"
+        xmlns:local="clr-namespace:SkillProfi_WPFClient"
+        mc:Ignorable="d"
+        Title="SkillProfi клиент" 
+        WindowStartupLocation="CenterScreen"
+        Height="800"
+        Width="1100"
+        MinHeight="800"
+        MinWidth="1100"
+        >
+    <!--Ресурсы окна-->
+    <Window.Resources>
+        <i:TextWhishOutHTMLConverter x:Key="HtmlTextConverter" />
+        <i:BooleanToVisibilityConverter x:Key="BoolVisibilityConverter" />
+        <i:NullToVisibilityConverter x:Key="NullVisibilityConverter" />
+        <i:NullStringToVisibilityConverter x:Key="NullStringVisibilityConverter" />
+        <BitmapImage x:Key="DefaultImage" UriSource="Images/Default.png"/>
+        <i:NoCorrectEmalToVisibilityConverter x:Key="NoCorrectEmalVisibilityConverter"/>
+        <i:BidStatusEnumToClolorConverter x:Key="BidStatusEnumColorConverter"/>
+        <i:BidStatusEnumToStringConverter x:Key="BidStatusEnumSringConverter"/>
+        <i:NullStringToParametrStringConverter x:Key="NullStringToParametrStringConverter"/>
+        <Style x:Key="BorderImage">
+            <Style.Setters>
+                <Setter Property="Border.CornerRadius" Value="13" />
+                <Setter Property="Border.MinWidth" Value="100" />
+                <Setter Property="Border.MaxWidth" Value="300" />
+                <!--Setter Property="Border.BorderBrush" Value="White" /-->
+                <Setter Property="Border.BorderThickness" Value="1" />
+                <Setter Property="Border.Padding" Value="2" />
+                <Setter Property="Border.Background" Value="#dc3545" />
+            </Style.Setters>
+        </Style>
+    </Window.Resources>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="10*" MinWidth="150"/>
+            <ColumnDefinition Width="4"/>
+            <ColumnDefinition Width="90*" MinWidth="300"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <Grid VerticalAlignment="Stretch" 
+              HorizontalAlignment="Stretch"
+              Grid.Row="0"
+              Grid.Column="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <!--Отображение зарегистрированного пользователя-->
+            <StackPanel Orientation="Horizontal"
+                        Grid.Column="0"
+                        VerticalAlignment="Center"
+                        Margin="5"
+                        Visibility="{Binding Path=IsAuthorized, Converter={StaticResource BoolVisibilityConverter}}">
+                <TextBlock Text="В системе зарегистрирован " FontSize="13"/>
+                <TextBlock Text="{Binding Path=AuthorizedName}" FontSize="13" FontWeight = "Bold"/>
+            </StackPanel>
+            <!--Цитата заголовка-->
+            <DockPanel Grid.Column="1"
+                        VerticalAlignment="Center"
+                        HorizontalAlignment="Center"
+                        Margin="3">
+                <TextBlock 
+                            TextAlignment="Center"
+                            Text="{Binding Path=QuoteInTheHeader}"
+                            Margin="5"
+                            FontSize="20"
+                            FontWeight = "Bold"
+                            />
+            </DockPanel>
+        </Grid>
+        
+        <!--Меню навигации-->
+        <StackPanel Orientation="Vertical"
+                    Grid.Column="0"
+                    Grid.Row="0"
+                    Grid.RowSpan="3">            
+            
+            <StackPanel Visibility="{Binding Path=IsAuthorized, Converter={StaticResource BoolVisibilityConverter}}">
+                <Button Margin="5" Command="{Binding Path=ShowDesctopCommand}">
+                    <TextBlock TextAlignment="Center" TextWrapping="Wrap" Text="Рабочий стол"/>
+                </Button>
+            </StackPanel>
+            <StackPanel>
+                <Button Margin="5"
+                        Command="{Binding Path=ShowBidPageCommand}">
+                    <TextBlock TextAlignment="Center" TextWrapping="Wrap" 
+                               Text="{Binding Path=MenuNameAndPageHeaderData.EditObject.MainPage, 
+                                        Converter={StaticResource NullStringToParametrStringConverter},
+                                        ConverterParameter=Главная}"/>
+                </Button>
+                <Button Margin="5" Command="{Binding Path=ShowProjectsCommand}">
+                    <TextBlock TextAlignment="Center" TextWrapping="Wrap" 
+                               Text="{Binding Path=MenuNameAndPageHeaderData.EditObject.ProjectPage, 
+                                        Converter={StaticResource NullStringToParametrStringConverter},
+                                        ConverterParameter=Проекты}"/>
+                </Button>
+                <Button Margin="5" Command="{Binding Path=ShowServecesCommand}">
+                    <TextBlock TextAlignment="Center" TextWrapping="Wrap" 
+                               Text="{Binding Path=MenuNameAndPageHeaderData.EditObject.ServicePage, 
+                                        Converter={StaticResource NullStringToParametrStringConverter},
+                                        ConverterParameter=Услуги}"/>
+                </Button>
+                <Button Margin="5" Command="{Binding Path=ShowBlogsCommand}">
+                    <TextBlock TextAlignment="Center" TextWrapping="Wrap"
+                               Text="{Binding Path=MenuNameAndPageHeaderData.EditObject.BlogPage, 
+                                        Converter={StaticResource NullStringToParametrStringConverter},
+                                        ConverterParameter=Блог}"/>
+                </Button>
+                <Button Margin="5"
+                        Command="{Binding Path=ShowContactCommand}">
+                    <TextBlock TextAlignment="Center" TextWrapping="Wrap" 
+                               Text="{Binding Path=MenuNameAndPageHeaderData.EditObject.ContactPage, 
+                                        Converter={StaticResource NullStringToParametrStringConverter},
+                                        ConverterParameter=Контакты}"/>
+                </Button>
+            </StackPanel>
+            <StackPanel Visibility="{Binding Path=IsAuthorized, Converter={StaticResource BoolVisibilityConverter}}">
+                <Button Margin="5" Command="{Binding Path=ShowUserSettingsCommand}">
+                    <TextBlock TextAlignment="Center" TextWrapping="Wrap" Text="Администрирование пользователей"/>                    
+                </Button>                  
+                <Button Margin="5"
+                        Command="{Binding Path=EditMenuNameAndPageHeaderDataCommand}">
+                    <TextBlock TextAlignment="Center" TextWrapping="Wrap" Text="Изменение названий меню"/>
+                </Button>
+                <Button Margin="5"
+                        Command="{Binding Path=EditHeaderDescriptionCommand}">
+                    <TextBlock TextAlignment="Center" TextWrapping="Wrap" Text="Изменение списка цитат заголовка"/>
+                </Button>
+            </StackPanel>
+            <StackPanel>
+                <Button Margin="5" Command="{Binding Path=ShowAuthorizationCommand}"
+                        Visibility="{Binding Path=IsAuthorized, ConverterParameter=invert, Converter={StaticResource BoolVisibilityConverter}}">
+                    <TextBlock TextAlignment="Center" TextWrapping="Wrap" Text="Авторизация"/>
+                </Button>
+                <Button Margin="5" Command="{Binding Path=ExitAuthorizationCommand}"
+                        Visibility="{Binding Path=IsAuthorized, Converter={StaticResource BoolVisibilityConverter}}">
+                    <TextBlock TextAlignment="Center" TextWrapping="Wrap" Text="Выход"/>
+                </Button>
+            </StackPanel>
+        </StackPanel>
+        
+        <GridSplitter Width="4"
+                      Grid.Row="0"
+                      Grid.RowSpan="3"
+                      HorizontalAlignment="Stretch"
+                      VerticalAlignment="Stretch"
+                      Grid.Column="1"/>
+        
+        <TabControl 
+            x:Name="tcMain"
+            Grid.Column="2"
+            Grid.Row="1"
+            VerticalAlignment="Stretch"
+            HorizontalAlignment="Stretch"
+            SelectedIndex="{Binding SelectedTabItem}">
+
+            <!--0 Вкладка Добаввить заявку-->
+            <TabItem IsTabStop="False"
+                Visibility ="Collapsed">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="50*"/>
+                        <ColumnDefinition Width="50*"/>
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Orientation="Vertical"
+                                Grid.Row="0"
+                                HorizontalAlignment="Stretch"
+                                Grid.ColumnSpan="2"
+                                Visibility="{Binding Path=MenuNameAndPageHeaderData.EditObject.MainPageHeader, Converter={StaticResource NullStringVisibilityConverter}}"
+                                >
+                        <!--TextBlock FontSize="10" Foreground="Gray" Text="тут будет путь"/-->
+                        <!--TODO: добавить visibility при биндинге названия страницы-->
+                        <TextBlock FontSize="24" Foreground="Blue" 
+                                       Text="{Binding Path=MenuNameAndPageHeaderData.EditObject.MainPageHeader}"/>
+                        <Separator Margin="0,15,0,15"/>
+                    </StackPanel>
+                    <Grid Grid.Row="1"
+                          Grid.ColumnSpan="2"
+                          Grid.Column="0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="150"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <Grid.Background>
+                            <ImageBrush ImageSource="{Binding Path=BidPageData.EditObject.Image, TargetNullValue={StaticResource DefaultImage}}" />
+                        </Grid.Background>
+                        <TextBlock
+                                Grid.Row="0"
+                                VerticalAlignment="Center"
+                                HorizontalAlignment="Center"
+                                Text="{Binding Path=BidPageData.EditObject.HeaderImage, Converter={StaticResource HtmlTextConverter}}"
+                                FontSize="35"
+                                FontWeight="Bold"  
+                                TextWrapping="Wrap"
+                                Foreground="White"
+                                />
+                        <Border Style="{StaticResource BorderImage}" 
+                                HorizontalAlignment="Right"
+                                Grid.Row="1"
+                                Margin="15">
+                            <TextBlock Text="{Binding Path=BidPageData.EditObject.HeaderButton}"
+                                       Margin="10"
+                                       FontSize="18"
+                                       Foreground="White"
+                                       />
+                        </Border>
+                    </Grid>
+                    <TextBlock Grid.Row="2"
+                               Grid.Column="0"
+                               Grid.ColumnSpan="2"
+                               Margin="10"
+                               FontSize="18"
+                               FontWeight="Bold"
+                               Text="{Binding Path=BidPageData.EditObject.HeaderForm}"/>
+                    <!--Имя-->
+                    <StackPanel Orientation="Vertical"
+                                Grid.Row="3"
+                                Grid.Column="0"
+                                HorizontalAlignment="Stretch">
+                        <TextBlock
+                            Margin="5"
+                            Text="Имя"/>
+                        <TextBox                           
+                            Margin="5"
+                            Text="{Binding Path=BidData.EditObject.Name,UpdateSourceTrigger=PropertyChanged}"/>
+                    </StackPanel>
+
+                    <!--email-->
+                    <StackPanel Orientation="Vertical"
+                                Grid.Row="3"
+                                Grid.Column="1"
+                                HorizontalAlignment="Stretch">
+                        <TextBlock
+                            Margin="5"
+                            Text="email"/>
+                        <TextBox                           
+                            Margin="5"
+                            Text="{Binding Path=BidData.EditObject.UserEmail, UpdateSourceTrigger=PropertyChanged}"/>
+                    </StackPanel>
+                    <TextBlock Grid.Row="4"
+                               Grid.Column="1"
+                               HorizontalAlignment="Left"
+                               VerticalAlignment="Center"
+                               Text="Не корректный email!"
+                               Foreground="Red"
+                               Visibility="{Binding Path=BidData.EditObject.UserEmail, Converter={StaticResource NoCorrectEmalVisibilityConverter}}"
+                               />
+
+
+                    <!--Текст обращения-->
+                    <StackPanel Orientation="Vertical"
+                                Grid.Row="5"
+                                Grid.Column="0"
+                                Grid.ColumnSpan="2"
+                                HorizontalAlignment="Stretch">
+                        <TextBlock
+                            Margin="5"
+                            Text="Текст обращения"/>
+                        <TextBox  
+                                 SpellCheck.IsEnabled="True" Language="ru-ru"
+                                 TextWrapping="Wrap"
+                                 Height="200"
+                                 ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                                 ScrollViewer.VerticalScrollBarVisibility="Auto"
+                                 ScrollViewer.CanContentScroll="True"
+                                 AcceptsReturn="True"
+                                 Margin="5"
+                                 Text="{Binding Path=BidData.EditObject.Text, UpdateSourceTrigger=PropertyChanged}"/>
+                    </StackPanel>
+                    <Button Content="Отправить"
+                            Grid.Row="6"
+                            Grid.Column="1"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Center"
+                            ToolTip="Отправить"
+                            Background="Blue"
+                            Foreground="White"
+                            Height="30"                                
+                            Width="100"
+                            Margin="3"
+                            Command="{Binding Path= SendBidCommand}"
+                            />
+                    <Button Content="Редактировать"
+                            Grid.Row="7"
+                            Grid.Column="1"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Center"
+                            ToolTip="Редактировать"
+                            Background="Blue"
+                            Foreground="White"
+                            Height="30"                                
+                            Width="100"
+                            Margin="3"
+                            Visibility="{Binding Path=IsAuthorized, Converter={StaticResource BoolVisibilityConverter}}"
+                            Command="{Binding Path= EditBidPageCommand}"
+                            />
+                </Grid>
+            </TabItem>
+            
+            <!--1 Вкладка Редактировать форму заявки-->
+            <TabItem IsTabStop="False"
+                Visibility ="Collapsed">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="50*"/>
+                        <ColumnDefinition Width="50*"/>
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Orientation="Vertical"
+                                Grid.Row="0"
+                                HorizontalAlignment="Stretch"
+                                Grid.ColumnSpan="2"
+                                Visibility="{Binding Path=MenuNameAndPageHeaderData.EditObject.MainPageHeader, Converter={StaticResource NullStringVisibilityConverter}}"
+                                >
+                        <!--TextBlock FontSize="10" Foreground="Gray" Text="тут будет путь"/-->
+                        <!--TODO: добавить visibility при биндинге названия страницы-->
+                        <TextBlock FontSize="24" Foreground="Blue" 
+                                       Text="{Binding Path=MenuNameAndPageHeaderData.EditObject.MainPageHeader}"/>
+                        <Separator Margin="0,15,0,15"/>
+                    </StackPanel>
+                    <Grid Grid.Row="1"
+                          Grid.ColumnSpan="2"
+                          Grid.Column="0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="150"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <Grid.Background>
+                            <ImageBrush ImageSource="{Binding Path=BidPageData.EditObject.Image , TargetNullValue={StaticResource DefaultImage}}" />
+                        </Grid.Background>
+                        <TextBox
+                                Grid.Row="0"
+                                VerticalAlignment="Center"
+                                HorizontalAlignment="Center"
+                                Text="{Binding Path=BidPageData.EditObject.HeaderImage, UpdateSourceTrigger=PropertyChanged}"
+                                FontSize="35"
+                                TextWrapping="Wrap"
+                                />
+                        <Border Style="{StaticResource BorderImage}" 
+                                HorizontalAlignment="Right"
+                                Grid.Row="1"
+                                Margin="15">
+                            <TextBox Text="{Binding Path=BidPageData.EditObject.HeaderButton, UpdateSourceTrigger=PropertyChanged}"
+                                       Margin="10"
+                                       FontSize="18"
+                                       />
+                        </Border>
+                    </Grid>
+                    <Button Content="Выберите изображение"
+                            Grid.Row="2"
+                            Grid.Column="0"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            ToolTip="Выберите изображение"
+                            Background="Blue"
+                            Foreground="White"
+                            Height="30"                                
+                            Width="Auto"
+                            Margin="3"
+                            Visibility="{Binding Path=IsAuthorized, Converter={StaticResource BoolVisibilityConverter}}"
+                            Command="{Binding Path=SelectImageCommand}"
+                            CommandParameter="{Binding Path=BidPageData.EditObject}"
+                            />
+                    <TextBox Grid.Row="3"
+                               Grid.Column="0"
+                               Grid.ColumnSpan="2"
+                               Margin="3,10,3,3"
+                               FontSize="18"
+                               Text="{Binding Path=BidPageData.EditObject.HeaderForm, UpdateSourceTrigger=PropertyChanged}"/>
+                    <!--Имя-->
+                    <StackPanel Orientation="Vertical"
+                                Grid.Row="4"
+                                Grid.Column="0"
+                                HorizontalAlignment="Stretch">
+                        <TextBlock
+                            Margin="5"
+                            Text="Имя"/>
+                        <TextBox Margin="5" IsReadOnly="True" IsEnabled="False"/>
+                    </StackPanel>
+
+                    <!--email-->
+                    <StackPanel Orientation="Vertical"
+                                Grid.Row="4"
+                                Grid.Column="1"
+                                HorizontalAlignment="Stretch">
+                        <TextBlock
+                            Margin="5"
+                            Text="email"/>
+                        <TextBox                           
+                            Margin="5" IsReadOnly="True" IsEnabled="False"/>
+                    </StackPanel>
+
+                    <!--Текст обращения-->
+                    <StackPanel Orientation="Vertical"
+                                Grid.Row="5"
+                                Grid.Column="0"
+                                Grid.ColumnSpan="2"
+                                HorizontalAlignment="Stretch">
+                        <TextBlock
+                            Margin="5"
+                            Text="Текст обращения"/>
+                        <TextBox  
+                                 IsReadOnly="True" IsEnabled="False"
+                                 SpellCheck.IsEnabled="True" Language="ru-ru"
+                                 TextWrapping="Wrap"
+                                 Height="150"
+                                 ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                                 ScrollViewer.VerticalScrollBarVisibility="Auto"
+                                 ScrollViewer.CanContentScroll="True"
+                                 AcceptsReturn="True"
+                                 Margin="5"/>
+                    </StackPanel>
+                    <Button Content="Отправить"
+                            Grid.Row="6"
+                            Grid.Column="1"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Center"
+                            ToolTip="Отправить"
+                            Height="30"                                
+                            Width="100"
+                            Margin="3"
+                            IsEnabled="False"
+                            />
+                    <Button Content="Сохранить"
+                            Grid.Row="7"
+                            Grid.Column="1"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Center"
+                            ToolTip="Сохранить"
+                            Background="Blue"
+                            Foreground="White"
+                            Height="30"                                
+                            Width="100"
+                            Margin="3"
+                            Visibility="{Binding Path=IsAuthorized, Converter={StaticResource BoolVisibilityConverter}}"
+                            Command="{Binding Path= SaveChangeBidPageCommand}"
+                            />
+                </Grid>
+            </TabItem>
+
+            <!--2 Вкладка Рабочий стол-->
+            <TabItem IsTabStop="False"
+                Visibility ="Collapsed">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <!--Количество Заявок-->
+                    <StackPanel Orientation="Horizontal"
+                                Grid.Row="0"
+                                Margin="5">
+                        <TextBlock Text="Всего заявок: "
+                                   FontWeight="Bold"
+                                   FontSize="18"/>
+                        <!--Количество Заявок-->
+                        <TextBlock Text="{Binding Path=BidDataSorted.AllBidsCount, TargetNullValue=0}"
+                                   FontWeight="Bold"
+                                   FontSize="18"/>
+                    </StackPanel>
+                    
+                    <!--Фильтр отображения-->
+                    <StackPanel Orientation="Horizontal"
+                                Grid.Row="1"
+                                Margin="5"
+                                VerticalAlignment="Center"
+                                HorizontalAlignment="Stretch">
+                        <RadioButton GroupName="Filter"
+                                     Margin="5,5,20,5"
+                                     IsChecked="{Binding Path=FilterBid[0].IsChecked, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
+                            <RadioButton.Content>
+                                <TextBlock
+                                    Text="Сегодня"
+                                    FontSize="18"
+                                    />
+                            </RadioButton.Content>
+                        </RadioButton>
+                        <RadioButton GroupName="Filter"
+                                     Margin="5,5,20,5"
+                                     IsChecked="{Binding Path=FilterBid[1].IsChecked, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
+                            <RadioButton.Content>
+                                <TextBlock
+                                    Text="Вчера"
+                                    VerticalAlignment="Center"
+                                     FontSize="18"/>
+                            </RadioButton.Content>
+                        </RadioButton>
+                        <RadioButton GroupName="Filter"
+                                     Margin="5,5,20,5"
+                                     IsChecked="{Binding Path=FilterBid[2].IsChecked, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
+                            <RadioButton.Content>
+                                <TextBlock
+                                    Text="Неделя"
+                                     FontSize="18"/>
+                            </RadioButton.Content>
+                        </RadioButton>
+                        <RadioButton GroupName="Filter"
+                                     Margin="5,5,20,5"
+                                     IsChecked="{Binding Path=FilterBid[3].IsChecked, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
+                            <RadioButton.Content>
+                                <TextBlock
+                                    Text="Месяц"
+                                     FontSize="18"/>
+                            </RadioButton.Content>
+                        </RadioButton>
+                        <RadioButton GroupName="Filter"
+                                     Margin="5,5,20,5"
+                                     IsChecked="{Binding Path=FilterBid[4].IsChecked, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
+                            <RadioButton.Content>
+                                <StackPanel Orientation="Horizontal"
+                                            VerticalAlignment="Center"
+                                            HorizontalAlignment="Center">
+                                    <TextBlock Text="с" 
+                                               FontSize="18"
+                                               Margin="3,0,10,0"/>
+                                    <DatePicker IsTodayHighlighted="True"
+                                                FirstDayOfWeek="Monday"
+                                                SelectedDate = "{Binding Path=FilterBid[4].DateFrom, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
+                                    <TextBlock Text="по" 
+                                               Margin="10,0,10,0"
+                                               FontSize="18"/>
+                                    <DatePicker IsTodayHighlighted="True"
+                                                FirstDayOfWeek="Monday"
+                                                SelectedDate = "{Binding Path=FilterBid[4].DateUpTo, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
+                                </StackPanel>
+                            </RadioButton.Content>
+                        </RadioButton>
+                        <Button Content="Обновить"
+                            Grid.Row="2"
+                            Grid.Column="0"
+                            ToolTip="Обновить"
+                            Background="Blue"
+                            Foreground="White"
+                            Height="30"                                
+                            Width="100"
+                            Margin="3"
+                            Visibility="{Binding Path=IsAuthorized, Converter={StaticResource BoolVisibilityConverter}}"
+                            Command="{Binding Path=RefreshDesctopDataCommand}"
+                            />
+                    </StackPanel>
+                    
+                    <!--Количество заявок в запросе-->
+                    <StackPanel Orientation="Horizontal"
+                                Grid.Row="2"
+                                Margin="5">
+                        <TextBlock Text="За указанный период поступило заявок: "
+                                   FontSize="18"/>
+                        <!--Количество Заявок в запросе-->
+                        <TextBlock Text="{Binding Path=BidDataSorted.Bids.Count, TargetNullValue=0}"
+                                   FontSize="18"/>
+                    </StackPanel>
+                    
+                    <!--Таблица заявок-->
+                    <DataGrid   
+                            Grid.Row="3"
+                            AutoGenerateColumns="false"
+                            VerticalAlignment="Stretch"
+                            HorizontalAlignment="Stretch"
+                            Margin="5"
+                            CanUserAddRows="False"
+                            CanUserDeleteRows="False"
+                            CanUserReorderColumns="False"
+                            SelectionMode="Single"
+                            VerticalScrollBarVisibility="Auto"
+                            ItemsSource ="{Binding Path=BidDataSorted.Bids }"
+                            MinRowHeight="30"><!--SelectedItem="{Binding Path=BidData.SelectedItem}"-->
+                        <DataGrid.Resources>
+                            <Style x:Key="WrappedColumnHeaderStyle" TargetType="{x:Type DataGridColumnHeader}">
+                                <Setter Property="ContentTemplate">
+                                    <Setter.Value>
+                                        <DataTemplate>
+                                            <TextBlock TextWrapping="Wrap" 
+                                                       FontWeight="Bold" 
+                                                       Text="{Binding}"/>
+                                        </DataTemplate>
+                                    </Setter.Value>                                    
+                                </Setter>
+                                <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                            </Style>
+
+                            <Style TargetType="TextBlock" x:Key="WrapTextJustify">
+                                <Setter Property="TextWrapping" Value="Wrap"/>
+                                <Setter Property="TextAlignment" Value="Justify"/>
+                                <Setter Property="HorizontalAlignment" Value="Stretch"/>
+                                <Setter Property="VerticalAlignment" Value="Center"/>
+                            </Style>
+                            <Style TargetType="TextBlock" x:Key="WrapTextCenter">
+                                <Setter Property="TextAlignment" Value="Center"/>
+                                <Setter Property="HorizontalAlignment" Value="Center"/>
+                                <Setter Property="VerticalAlignment" Value="Center"/>
+                                <Setter Property="TextWrapping" Value="Wrap"/>
+                            </Style>
+                        </DataGrid.Resources>
+                        <DataGrid.Columns>
+                            <DataGridTextColumn 
+                                                Header="Номер заявки"
+                                                IsReadOnly="True"
+                                                MinWidth="50"
+                                                Width="Auto"                                
+                                                ElementStyle="{StaticResource WrapTextCenter}"
+                                                HeaderStyle="{StaticResource WrappedColumnHeaderStyle}"
+                                                Binding="{Binding Path=Id}"
+                                                />
+                            <DataGridTextColumn 
+                                                Header="Время заявки"
+                                                IsReadOnly="True"
+                                                MinWidth="100"
+                                                Width="Auto"
+                                                ElementStyle="{StaticResource WrapTextCenter}"
+                                                HeaderStyle="{StaticResource WrappedColumnHeaderStyle}"
+                                                Binding="{Binding Path=Date, StringFormat=dd.MM.yyyy HH:mm:ss}"/>
+                            <DataGridTextColumn 
+                                                Header="Имя"
+                                                IsReadOnly="True"
+                                                MinWidth="100"
+                                                Width="Auto" 
+                                                ElementStyle="{StaticResource WrapTextCenter}"
+                                                HeaderStyle="{StaticResource WrappedColumnHeaderStyle}"
+                                                Binding="{Binding Path=Name}"/>
+                            <DataGridTextColumn 
+                                                Header="Текст заявки"
+                                                IsReadOnly="True"
+                                                MinWidth="100"
+                                                Width="*"
+                                                ElementStyle="{StaticResource WrapTextJustify}"
+                                                HeaderStyle="{StaticResource WrappedColumnHeaderStyle}"
+                                                Binding="{Binding Path=Text}" >
+
+                            </DataGridTextColumn>
+                            <DataGridTextColumn 
+                                                Header="Контакты"
+                                                IsReadOnly="True"
+                                                MinWidth="100"
+                                                Width="Auto"
+                                                ElementStyle="{StaticResource WrapTextCenter}"
+                                                HeaderStyle="{StaticResource WrappedColumnHeaderStyle}"
+                                                Binding="{Binding Path=UserEmail}"/>
+                            <DataGridTemplateColumn 
+                                                Header="Статус"
+                                                IsReadOnly="True"
+                                                MinWidth="100"
+                                                Width="Auto"
+                                                HeaderStyle="{StaticResource WrappedColumnHeaderStyle}"                                
+  >
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <DockPanel Background="{Binding BidStatus, Converter={StaticResource BidStatusEnumColorConverter}}">
+                                            <TextBlock VerticalAlignment="Center"
+                                                       HorizontalAlignment="Stretch"
+                                                       TextWrapping="Wrap"
+                                                       TextAlignment="Center"
+                                                       Text="{Binding Path=BidStatus, Converter={StaticResource BidStatusEnumSringConverter}}"/>
+                                        </DockPanel>
+
+
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                                <!--DataGridTextColumn.ElementStyle>
+                                    <Style TargetType="{x:Type TextBlock}">
+                                        <Setter Property="Background" Value="{Binding BidStatus, Converter={StaticResource BidStatusEnumColorConverter}}"/>
+                                        <Setter Property="TextAlignment" Value="Center"/>
+                                        <Setter Property="HorizontalAlignment" Value="Stretch"/>
+                                        <Setter Property="VerticalAlignment" Value="Stretch"/>
+                                        <Setter Property="TextWrapping" Value="Wrap"/>
+                                    </Style>
+                                </DataGridTextColumn.ElementStyle!-->
+                            </DataGridTemplateColumn>
+
+                            <DataGridTemplateColumn Header="Изменить статус" MinWidth="70" HeaderStyle="{StaticResource WrappedColumnHeaderStyle}">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Button Content="Изменить"
+                                                ToolTip="Изменить"
+                                                Background="Blue"
+                                                Foreground="White"
+                                                Height="30"
+                                                Width="70"
+                                                Margin="1"                                                
+                                                Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}, Path=DataContext.EditBidStatusCommand}"
+                                                CommandParameter="{Binding}"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Grid>
+            </TabItem>
+
+            <!--3 Вкладка Рабочий стол редактировать заявку-->
+            <TabItem IsTabStop="False"
+                Visibility ="Collapsed">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <!--Заголовок страницы-->
+                    <StackPanel Orientation="Horizontal"
+                                Grid.Row="0"
+                                HorizontalAlignment="Center" >
+                        <TextBlock FontSize="24" FontWeight="Bold"
+                                       Text="Изменение статуса заявки №"/>
+                        <TextBlock FontSize="24" FontWeight="Bold"
+                                       Text="{Binding Path=BidData.SelectedItem.Id}"/>                        
+                    </StackPanel>
+                    <Separator Grid.Row="1" Margin="0,15,0,15"/>
+                    <ItemsControl 
+                        ItemsSource="{Binding Path=StatusBid}"
+                        Grid.Row="2"
+                        HorizontalAlignment="Center"
+                        Background="Transparent"
+                        BorderBrush="Transparent"
+                        >
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <DockPanel Margin="5">
+                                    <RadioButton
+                                        GroupName="Status"
+                                        IsChecked="{Binding Path=IsChecked, UpdateSourceTrigger=PropertyChanged}">
+                                        <RadioButton.Content>
+                                            <TextBlock
+                                            Margin="5,0,0,0"
+                                            Text="{Binding Path=Status, Converter={StaticResource BidStatusEnumSringConverter}}"
+                                            FontSize="18"/>
+                                        </RadioButton.Content>
+                                    </RadioButton>                                        
+                                </DockPanel>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+
+                    <Button 
+                            Grid.Row="3"
+                            Content="Сохранить"
+                            ToolTip="Сохранить"
+                            Background="Blue"
+                            Foreground="White"
+                            Height="30"
+                            Width="100"
+                            Margin="15"                                                
+                            Command="{Binding Path=SaveBidStatusCommand}"
+                            CommandParameter="{Binding BidData.SelectedItem.Id}"/>
+                </Grid>
+            </TabItem>
+            
+            <!--4 Вкладка проекты-->
+            <TabItem IsTabStop="False"
+                Visibility ="Collapsed">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="90*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="100*" MinWidth="230"/>
+                        <ColumnDefinition Width="4"/>
+                        <ColumnDefinition Width="auto" MinWidth="300"/>
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Orientation="Vertical"
+                                Grid.Row="0"
+                                Visibility="{Binding Path=MenuNameAndPageHeaderData.EditObject.ProjectPageHeader, Converter={StaticResource NullStringVisibilityConverter}}">
+                        <!--TextBlock FontSize="10" Foreground="Gray" Text="тут будет путь"/-->
+                        <!--TODO: добавить visibility при биндинге названия страницы-->
+                            <TextBlock FontSize="24" Foreground="Blue" 
+                                       Text="{Binding Path=MenuNameAndPageHeaderData.EditObject.ProjectPageHeader}"/>
+                        <Separator Margin="0,15,0,15"/>
+                    </StackPanel>
+                    <GridSplitter VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Width="4" Grid.Column="1" Grid.Row="1" Grid.RowSpan="2"/>
+                    
+                    <ListBox                         
+                        ItemsSource="{Binding Path=ProjectData.DataCollection}"
+                        SelectedItem="{Binding Path=ProjectData.SelectedItem}"
+                        ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                        VerticalAlignment="Stretch"
+                        HorizontalAlignment="Stretch"
+                        Background="Transparent"
+                        BorderBrush="Transparent"
+                        Grid.Row="1">
+                        <ListBox.ItemsPanel>
+                            <ItemsPanelTemplate>                                
+                                <WrapPanel Orientation="Horizontal"
+                                           VerticalAlignment="Stretch" 
+                                           HorizontalAlignment="Stretch">                                    
+                                </WrapPanel>                                
+                            </ItemsPanelTemplate>
+                        </ListBox.ItemsPanel>
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Vertical" Margin="5">
+                                    <Image 
+                                           HorizontalAlignment="Center"
+                                           Width="200" 
+                                           Height="Auto"
+                                           Margin="0,5,0,5"
+                                           Source="{Binding Image, TargetNullValue={StaticResource DefaultImage}}"
+                                           />
+                                    
+                                        <TextBlock TextAlignment="Center"
+                                                   FontSize="18" 
+                                                   Text="{Binding Header}"
+                                                   TextWrapping="Wrap"
+                                                   FontWeight = "Bold"
+                                                   Background="LightGray"
+                                                   Margin="0,10,0,0"
+                                                   Width="200"/>
+                                    <DockPanel HorizontalAlignment="Right" Margin="5"
+                                                Visibility="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}, Path=DataContext.IsAuthorized, Converter={StaticResource BoolVisibilityConverter}}">
+                                        <Button Height="35" Margin="1" 
+                                                Width="35" ToolTip="Редактировать"
+                                                Background="Transparent"
+                                                BorderBrush="Transparent"
+                                                Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}, Path=DataContext.EditProjectCommand}"
+                                                CommandParameter="{Binding Path=Id}"
+                                                >
+                                            <Image Source="Images/edit.png"/>
+                                        </Button>
+                                        <Button Height="35" Margin="1" 
+                                                Width="35" ToolTip="Удалить"
+                                                Background="Transparent"
+                                                BorderBrush="Transparent"
+                                                Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}, Path=DataContext.RemoveProjectCommand}"
+                                                CommandParameter="{Binding}"
+                                                >
+                                            <Image Source="Images/delete.png"/>
+                                        </Button>
+                                    </DockPanel>
+                                </StackPanel>
+                                
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                    <Button Content="Добавить"
+                            Grid.Row="2"
+                            Grid.Column="0"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Center"
+                            ToolTip="Добавить"
+                            Background="Blue"
+                            Foreground="White"
+                            Height="30"                                
+                            Width="100"
+                            Margin="3"
+                            Visibility="{Binding Path=IsAuthorized, Converter={StaticResource BoolVisibilityConverter}}"
+                            Command="{Binding Path= СreateProjectCommand}"
+                            />
+                    <!--Отображение выбранного Проекта-->
+                    <Grid Grid.Column="2" 
+                          Grid.Row="1" 
+                          MinWidth="300"
+                          Visibility="{Binding Path=ProjectData.SelectedItem, Converter={StaticResource NullVisibilityConverter}}">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="80*" MinWidth="100"/>
+                            <ColumnDefinition Width="110"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <TextBlock 
+                                Grid.Row="0"
+                                Grid.Column="0"
+                                Foreground="Blue"
+                                VerticalAlignment="Bottom"
+                                Margin="10,0,0,3"
+                                FontSize="24" 
+                                Text="{Binding Path=ProjectData.SelectedItem.Header}"/>
+                        <Image 
+                            Grid.Column="1"
+                            Grid.Row="0"
+                            VerticalAlignment="Top"
+                            HorizontalAlignment="Center"
+                            Width="100" 
+                            Height="Auto"
+                            Margin="0,0,0,3"
+                            Source="{Binding ProjectData.SelectedItem.Image, TargetNullValue={StaticResource DefaultImage}}"
+                            />
+                        <Separator Grid.Row="1" Grid.ColumnSpan="2" Margin="3,3,3,3"/>
+                        <WebBrowser
+                                    Grid.Row="2"
+                                    Grid.Column="0"
+                                    Grid.ColumnSpan="2"
+                                    Height="Auto"
+                                    Width="Auto"
+                                    VerticalAlignment="Stretch"
+                                    HorizontalAlignment="Stretch"
+                                    i:BrowserBehavior.HtmlString="{Binding Path=ProjectData.SelectedItem.Description}"></WebBrowser>
+                    </Grid>
+                </Grid>
+            </TabItem>
+
+            <!--5 Вкладка Добавить/редактировать проект-->
+            <TabItem IsTabStop="False"
+                Visibility ="Collapsed">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="90*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="75*"/>
+                        <ColumnDefinition Width="25*"/>
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Orientation="Vertical"
+                                Grid.Row="0"
+                                Grid.Column="0"
+                                Grid.ColumnSpan="2">
+                        <TextBlock FontSize="24" 
+                                   TextAlignment="Center"
+                                   FontWeight="Bold"
+                                   Text="Добавление проекта"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Vertical"
+                                Grid.Column="0"
+                                Grid.Row="1"
+                                Margin="5">
+                        <TextBlock Text="Наименование проекта" 
+                                   Margin="3"
+                                   FontSize="14"
+                                   />
+                        <TextBox Margin="3"
+                                 SpellCheck.IsEnabled="True" Language="ru-ru"
+                                 Text="{Binding Path=ProjectData.EditObject.Header, UpdateSourceTrigger=PropertyChanged}"/>
+                        <TextBlock Text="Описание проекта" 
+                                   Margin="3"
+                                   FontSize="14"/>
+                        <TextBox Margin="3"
+                                 SpellCheck.IsEnabled="True" Language="ru-ru"
+                                 TextWrapping="Wrap"
+                                 Height="300"
+                                 ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                                 ScrollViewer.VerticalScrollBarVisibility="Auto"
+                                 ScrollViewer.CanContentScroll="True"
+                                 AcceptsReturn="True"
+                                 Text="{Binding Path=ProjectData.EditObject.Description , UpdateSourceTrigger=PropertyChanged}"/>
+                    </StackPanel>
+                    <Grid Grid.Row="1"
+                          Grid.Column="1">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <Image
+                            Grid.Row="0"
+                            Source="{Binding Path=ProjectData.EditObject.Image, TargetNullValue={StaticResource DefaultImage}}"/>
+                        <Button Content="Выберите изображение"
+                            Grid.Row="1"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            ToolTip="Выберите изображение"
+                            Background="Blue"
+                            Foreground="White"
+                            Height="30"                                
+                            Width="Auto"
+                            Margin="3"
+                            Visibility="{Binding Path=IsAuthorized, Converter={StaticResource BoolVisibilityConverter}}"
+                            Command="{Binding Path=SelectImageCommand}"
+                            CommandParameter="{Binding Path=ProjectData.EditObject}"
+                            />
+
+                    </Grid>
+                    <Button Content="{Binding Path=EditOrCreateTextButton}"
+                            Grid.Column="0"
+                            Grid.ColumnSpan="2"
+                            Grid.Row="2"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Center"
+                            ToolTip="Добавить"
+                            Background="Blue"
+                            Foreground="White"
+                            Height="30"                                
+                            Width="100"
+                            Margin="3"
+                            Visibility="{Binding Path=IsAuthorized, Converter={StaticResource BoolVisibilityConverter}}"
+                            Command="{Binding Path=SaveChangesProjectCommand}"
+                            />
+                </Grid>
+            </TabItem>
+
+            <!--6 Вкладка Услуги-->
+            <TabItem IsTabStop="False"
+                Visibility ="Collapsed">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="90*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <StackPanel Orientation="Vertical"
+                                Grid.Row="0"
+                                Visibility="{Binding Path=MenuNameAndPageHeaderData.EditObject.ServicePageHeader, Converter={StaticResource NullStringVisibilityConverter}}">
+                        <!--TextBlock FontSize="10" Foreground="Gray" Text="тут будет путь"/-->
+                        <!--TODO: добавить visibility при биндинге названия страницы-->
+                        <TextBlock FontSize="24" Foreground="Blue"
+                                   Text="{Binding Path=MenuNameAndPageHeaderData.EditObject.ServicePageHeader}"/>
+                        <Separator Margin="0,15,0,15"/>
+                    </StackPanel>
+                    
+                    <ListBox 
+                        Name="lbServises"
+                        Grid.Row="1"
+                        HorizontalAlignment="Stretch" 
+                        Margin="0" 
+                        VerticalAlignment="Stretch"
+                        HorizontalContentAlignment="Stretch" 
+                        SelectionMode="Single"
+                        Background="Transparent"
+                        BorderBrush="Transparent"
+                        ItemsSource="{Binding Path=ServiceData.DataCollection}"
+                     >
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Vertical">
+                                    <Expander
+                                        Margin="5"
+                                        BorderBrush="LightBlue">
+                                        <Expander.Header>
+                                            <TextBlock Text="{Binding Path=Header}"
+                                                       FontSize="20"/>
+                                        </Expander.Header>
+                                        <WebBrowser
+                                            Height="300"
+                                            VerticalAlignment="Stretch"
+                                            HorizontalAlignment="Stretch"
+                                            i:BrowserBehavior.HtmlString="{Binding Path=Description}"/>
+                                    </Expander>
+                                    <DockPanel HorizontalAlignment="Left" Margin="5"
+                                                Visibility="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}, Path=DataContext.IsAuthorized, Converter={StaticResource BoolVisibilityConverter}}">
+                                        <Button Height="35" Margin="1" 
+                                                Width="35" ToolTip="Редактировать"
+                                                Background="Transparent"
+                                                BorderBrush="Transparent"
+                                                Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}, Path=DataContext.EditServiceCommand}"
+                                                CommandParameter="{Binding Path=Id}"
+                                                >
+                                            <Image Source="Images/edit.png"/>
+                                        </Button>
+                                        <Button Height="35" Margin="1" 
+                                                Width="35" ToolTip="Удалить"
+                                                Background="Transparent"
+                                                BorderBrush="Transparent"
+                                                Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}, Path=DataContext.RemoveServiceCommand}"
+                                                CommandParameter="{Binding}"
+                                                >
+                                            <Image Source="Images/delete.png"/>
+                                        </Button>
+                                    </DockPanel>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                        <ListBox.ItemContainerStyle>
+                            <Style TargetType="ListBoxItem">
+                                <Setter Property="Focusable" Value="False" />
+                            </Style>
+                        </ListBox.ItemContainerStyle>
+                    </ListBox>
+                    <Button Content="Добавить"
+                            Grid.Row="2"
+                            Grid.Column="0"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Center"
+                            ToolTip="Добавить"
+                            Background="Blue"
+                            Foreground="White"
+                            Height="30"                                
+                            Width="100"
+                            Margin="3"
+                            Visibility="{Binding Path=IsAuthorized, Converter={StaticResource BoolVisibilityConverter}}"
+                            Command="{Binding Path= СreateServiceCommand}"
+                            />
+                </Grid>
+                
+            </TabItem>
+                
+            <!--7 Вкладка Добавить/редактировать услуги-->
+            <TabItem IsTabStop="False"
+                Visibility ="Collapsed">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="90*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <StackPanel Orientation="Vertical"
+                                Grid.Row="0">
+                        <TextBlock FontSize="24" 
+                                   TextAlignment="Center"
+                                   FontWeight="Bold"
+                                   Text="Добавление услуги"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Vertical"
+                                Grid.Row="1"
+                                Margin="5">
+                        <TextBlock Text="Заголовок услуги" 
+                                   Margin="3"
+                                   FontSize="14"
+                                   />  
+                        <TextBox Margin="3"
+                                 SpellCheck.IsEnabled="True" Language="ru-ru"
+                                 Text="{Binding Path=ServiceData.EditObject.Header, UpdateSourceTrigger=PropertyChanged}"/>
+                        <TextBlock Text="Описание Услуги" 
+                                   Margin="3"
+                                   FontSize="14"/>
+                        <TextBox Margin="3"
+                                 SpellCheck.IsEnabled="True" Language="ru-ru"
+                                 TextWrapping="Wrap"
+                                 Height="300"
+                                 ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                                 ScrollViewer.VerticalScrollBarVisibility="Auto"
+                                 ScrollViewer.CanContentScroll="True"
+                                 AcceptsReturn="True"
+                                 Text="{Binding Path=ServiceData.EditObject.Description, UpdateSourceTrigger=PropertyChanged}"/>
+                    </StackPanel>
+                    <Button Content="{Binding Path=EditOrCreateTextButton}"
+                            Grid.Row="2"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Center"
+                            ToolTip="Добавить"
+                            Background="Blue"
+                            Foreground="White"
+                            Height="30"                                
+                            Width="100"
+                            Margin="3"
+                            Visibility="{Binding Path=IsAuthorized, Converter={StaticResource BoolVisibilityConverter}}"
+                            Command="{Binding Path=SaveChangeServiceCommand}"
+                            />
+
+                </Grid>
+            </TabItem>
+
+            <!--8 Вкладка Блог-->
+            <TabItem IsTabStop="False"
+                Visibility ="Collapsed">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="90*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="100*" MinWidth="200"/>
+                        <ColumnDefinition Width="4"/>
+                        <ColumnDefinition Width="*" MinWidth="300"/>
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Orientation="Vertical"
+                                Grid.Row="0"
+                                Visibility="{Binding Path=MenuNameAndPageHeaderData.EditObject.BlogPageHeader, Converter={StaticResource NullStringVisibilityConverter}}">
+                        <!--TextBlock FontSize="10" Foreground="Gray" Text="тут будет путь"/-->
+                        <!--TODO: добавить visibility при биндинге названия страницы-->
+                        <TextBlock FontSize="24" Foreground="Blue"
+                                   Text="{Binding Path=MenuNameAndPageHeaderData.EditObject.BlogPageHeader}"/>
+                        <Separator Margin="0,15,0,15"/>
+                    </StackPanel>
+                    <GridSplitter VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Width="4" Grid.Column="1" Grid.Row="1" Grid.RowSpan="2"/>
+                    <ListBox
+                        Grid.Row="1"
+                        VerticalAlignment="Stretch"
+                        HorizontalAlignment="Stretch"
+                        Background="Transparent"
+                        BorderBrush="Transparent"
+                        ItemsSource="{Binding Path=BlogData.DataCollection}"
+                        SelectedItem="{Binding Path=BlogData.SelectedItem}"
+                        ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                        <ListBox.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel Orientation="Horizontal"
+                                           VerticalAlignment="Top" 
+                                           HorizontalAlignment="Left">
+                                </WrapPanel>
+                            </ItemsPanelTemplate>
+                        </ListBox.ItemsPanel>
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Vertical" Margin="10" HorizontalAlignment="Center">
+                                    <TextBlock Margin="0,0,0,10" MaxWidth="150" Text="{Binding Path=Date, StringFormat= dd MMMM yyyy, ConverterCulture={x:Static gl:CultureInfo.CurrentCulture}}"></TextBlock>
+                                        <Image 
+                                           HorizontalAlignment="Center"
+                                           Width="150" 
+                                           Height="Auto"
+                                           Source="{Binding Image, TargetNullValue={StaticResource DefaultImage}}"
+                                           />
+                                        <TextBlock TextAlignment="Center"
+                                                   FontSize="12" 
+                                                   Text="{Binding Header}"
+                                                   MinWidth="150"
+                                                   MaxWidth="150"
+                                                   Width="150"
+                                                   TextWrapping="Wrap"
+                                                   FontWeight = "Bold"/>
+                                        <TextBlock Text="{Binding Path=Description, Converter={StaticResource HtmlTextConverter}}"
+                                                    TextWrapping="Wrap"
+                                                    TextAlignment="Justify"
+                                                    MinWidth="150"
+                                                    MaxWidth="150"
+                                                    Width="150"
+                                                    Height="95"
+                                                   TextTrimming="CharacterEllipsis"/>
+                                    <DockPanel HorizontalAlignment="Right" Margin="5"
+                                                Visibility="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}, Path=DataContext.IsAuthorized, Converter={StaticResource BoolVisibilityConverter}}">
+                                        <Button Height="35" Margin="1" 
+                                                Width="35" ToolTip="Редактировать"
+                                                Background="Transparent"
+                                                BorderBrush="Transparent"
+                                                Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}, Path=DataContext.EditBlogCommand}"
+                                                CommandParameter="{Binding Path=Id}"
+                                                >
+                                                <Image Source="Images/edit.png"/>                                           
+                                        </Button>
+                                        <Button Height="35" Margin="1" 
+                                                Width="35" ToolTip="Удалить"
+                                                Background="Transparent"
+                                                BorderBrush="Transparent"
+                                                Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}, Path=DataContext.RemoveBlogCommand}"
+                                                CommandParameter="{Binding}"
+                                                >
+                                            <Image Source="Images/delete.png"/>
+                                        </Button>
+                                    </DockPanel>
+                                </StackPanel>
+
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                    <Button Content="Добавить"
+                            Grid.Row="2"
+                            Grid.Column="0"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Center"
+                            ToolTip="Добавить"
+                            Background="Blue"
+                            Foreground="White"
+                            Height="30"                                
+                            Width="100"
+                            Margin="3"
+                            Visibility="{Binding Path=IsAuthorized, Converter={StaticResource BoolVisibilityConverter}}"
+                            Command="{Binding Path= СreateBlogCommand}"
+                            />
+                    <!--Отображение выбранного Блога-->
+                    <Grid Grid.Column="2" 
+                          Grid.Row="1" 
+                          MinWidth="300"
+                          Visibility="{Binding Path=BlogData.SelectedItem, Converter={StaticResource NullVisibilityConverter}}">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="200"/>
+                             <ColumnDefinition Width="80*" MinWidth="100"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <StackPanel  Orientation="Vertical" Grid.Row="0" Grid.ColumnSpan="2">
+                            <TextBlock Foreground="Blue" FontSize="24" Text="{Binding BlogData.SelectedItem.Header}"/>
+                            <Separator/>
+                            <TextBlock Margin="0,10,0,10" Text="{Binding Path=BlogData.SelectedItem.Date, StringFormat= dd MMMM yyyy, ConverterCulture={x:Static gl:CultureInfo.CurrentCulture}}"/>                            
+                        </StackPanel>
+                        <Image 
+                            Grid.Column="0"
+                            Grid.Row="1"
+                            VerticalAlignment="Top"
+                            HorizontalAlignment="Center"
+                            Width="150" 
+                            Height="Auto"
+                            Source="{Binding BlogData.SelectedItem.Image, TargetNullValue={StaticResource DefaultImage}}"
+                            />
+                        <WebBrowser
+                            Grid.Row="1"
+                            Grid.Column="1"
+                                    Height="Auto"
+                                    Width="Auto"
+                                    VerticalAlignment="Stretch"
+                                    HorizontalAlignment="Stretch"
+                                    i:BrowserBehavior.HtmlString="{Binding Path=BlogData.SelectedItem.Description}"></WebBrowser>
+                    </Grid>
+                </Grid>
+            </TabItem>
+
+            <!--9 Вкладка Добавить/редактировать Блог-->
+            <TabItem IsTabStop="False"
+                Visibility ="Collapsed">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="90*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="75*"/>
+                        <ColumnDefinition Width="25*"/>
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Orientation="Vertical"
+                                Grid.Row="0"
+                                Grid.Column="0"
+                                Grid.ColumnSpan="2">
+                        <TextBlock FontSize="24" 
+                                   TextAlignment="Center"
+                                   FontWeight="Bold"
+                                   Text="Добавление блога"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Vertical"
+                                Grid.Column="0"
+                                Grid.Row="1"
+                                Margin="5">
+                        <TextBlock Text="Название блога" 
+                                   Margin="3"
+                                   FontSize="14"
+                                   />
+                        <TextBox Margin="3"
+                                 SpellCheck.IsEnabled="True" Language="ru-ru"
+                                 Text="{Binding Path=BlogData.EditObject.Header, UpdateSourceTrigger=PropertyChanged}"/>
+
+                        <TextBlock Text="Дата" 
+                                   Margin="3"
+                                   FontSize="14"/>
+                        <DatePicker Margin="3"
+                                    IsTodayHighlighted="True"
+                                    FirstDayOfWeek="Monday"
+                                    SelectedDate="{Binding Path=BlogData.EditObject.Date, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                    />
+                        <TextBlock Text="Описание проекта" 
+                                   Margin="3"
+                                   FontSize="14"/>
+                        <TextBox Margin="3"
+                                 SpellCheck.IsEnabled="True" Language="ru-ru"
+                                 TextWrapping="Wrap"
+                                 Height="300"
+                                 ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                                 ScrollViewer.VerticalScrollBarVisibility="Auto"
+                                 ScrollViewer.CanContentScroll="True"
+                                 AcceptsReturn="True"
+                                 Text="{Binding Path=BlogData.EditObject.Description, UpdateSourceTrigger=PropertyChanged}"/>
+                    </StackPanel>
+                    <Grid Grid.Row="1"
+                          Grid.Column="1">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <Image
+                            Grid.Row="0"
+                            Source="{Binding Path=BlogData.EditObject.Image, TargetNullValue={StaticResource DefaultImage}}"/>
+                        <Button Content="Выберите изображение"
+                            Grid.Row="1"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            ToolTip="Выберите изображение"
+                            Background="Blue"
+                            Foreground="White"
+                            Height="30"                                
+                            Width="Auto"
+                            Margin="3"
+                            Visibility="{Binding Path=IsAuthorized, Converter={StaticResource BoolVisibilityConverter}}"
+                            Command="{Binding Path=SelectImageCommand}"
+                            CommandParameter="{Binding Path=BlogData.EditObject}"
+                            />
+
+                    </Grid>
+                    <Button Content="{Binding Path=EditOrCreateTextButton}"
+                            Grid.Column="0"
+                            Grid.ColumnSpan="2"
+                            Grid.Row="2"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Center"
+                            ToolTip="Добавить"
+                            Background="Blue"
+                            Foreground="White"
+                            Height="30"                                
+                            Width="100"
+                            Margin="3"
+                            Visibility="{Binding Path=IsAuthorized, Converter={StaticResource BoolVisibilityConverter}}"
+                            Command="{Binding Path=SaveChangeBlogCommand}"
+                            />
+                </Grid>
+            </TabItem>
+
+            <!--10 Контакты-->
+            <TabItem IsTabStop="False"
+                Visibility ="Collapsed">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="90*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <StackPanel Orientation="Vertical"
+                                Grid.Row="0"
+                                Visibility="{Binding Path=MenuNameAndPageHeaderData.EditObject.ContactPageHeader, Converter={StaticResource NullStringVisibilityConverter}}">
+                        <!--TextBlock FontSize="10" Foreground="Gray" Text="тут будет путь"/-->
+                        <!--TODO: добавить visibility при биндинге названия страницы-->
+                        <TextBlock FontSize="24" Foreground="Blue"
+                                   Text="{Binding Path=MenuNameAndPageHeaderData.EditObject.ContactPageHeader}"/>
+                        <Separator Margin="0,15,0,15"/>
+                    </StackPanel>
+                    <!--тело страницы-->
+                    <Grid Grid.Row="1">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="50*"/>
+                            <ColumnDefinition Width="50*"/>
+                        </Grid.ColumnDefinitions>
+                            <WebBrowser
+                                    Grid.Row="0"
+                                    Grid.Column="0"
+                                    Width="Auto"
+                                    Height="Auto"
+                                    i:BrowserBehavior.HtmlString="{Binding Path=ContactData.EditObject.Address}"
+                                    i:BrowserBehavior.HideScroll="True"
+                                    />
+                            <Image 
+                                   Grid.Row="0"
+                                   Grid.Column="1"
+                                   VerticalAlignment="Top"
+                                   HorizontalAlignment="Center"
+                                   Width="Auto"
+                                   Height="Auto"
+                                   Source="{Binding Path=ContactData.EditObject.Image, TargetNullValue={StaticResource DefaultImage}}"/>
+                            <!--Ссылки на соц сети-->
+                        <ListBox
+                            Grid.Row="2"
+                            Grid.Column="0"
+                            VerticalAlignment="Stretch"
+                            HorizontalAlignment="Stretch"
+                            ItemsSource="{Binding Path=ContactData.EditObject.Links}"
+                            ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                            Background="Transparent"
+                            BorderBrush="Transparent">
+                            <ListBox.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <WrapPanel Orientation="Horizontal"
+                                               VerticalAlignment="Top" 
+                                               HorizontalAlignment="Left">
+                                    </WrapPanel>
+                                </ItemsPanelTemplate>
+                            </ListBox.ItemsPanel>
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <Button
+                                            Background="Transparent"
+                                            BorderBrush="Transparent"
+                                            Height="35"
+                                            Width="35"
+                                            Margin="1"
+                                            ToolTip="{Binding Path=Description}"
+                                            Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}, Path=DataContext.StartLinkCommand}"
+                                            CommandParameter="{Binding Path=Description}">
+                                        <Image 
+                                           HorizontalAlignment="Center"
+                                           Source="{Binding Image, TargetNullValue={StaticResource DefaultImage}}"
+                                           />
+
+                                    </Button>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                    </Grid>
+                    <Button Content="Редактировать"
+                            Grid.Row="2"
+                            Grid.Column="1"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Center"
+                            ToolTip="Редактировать"
+                            Background="Blue"
+                            Foreground="White"
+                            Height="30"                                
+                            Width="100"
+                            Margin="3"
+                            Visibility="{Binding Path=IsAuthorized, Converter={StaticResource BoolVisibilityConverter}}"
+                            Command="{Binding Path= EditContactCommand}"
+                            />
+                </Grid>
+            </TabItem>
+            
+            <!--11 Контакты Редактировать-->
+            <TabItem IsTabStop="False"
+                Visibility ="Collapsed">
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="50*"/>
+                        <ColumnDefinition Width="50*"/>
+                    </Grid.ColumnDefinitions>
+                    
+                    <TextBlock FontSize="24"
+                               Grid.Row="0"
+                               Grid.Column="0"
+                               Margin="5"
+                               Text="Адрес"
+                               TextAlignment="Center"
+                               FontWeight="Bold"
+                               />
+                    <TextBox
+                            Grid.Row="1"
+                            Grid.Column="0"
+                            Margin="3"
+                            SpellCheck.IsEnabled="True" Language="ru-ru"
+                            TextWrapping="Wrap"
+                            Height="200"
+                            ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                            ScrollViewer.VerticalScrollBarVisibility="Auto"
+                            ScrollViewer.CanContentScroll="True"
+                            AcceptsReturn="True"
+                            Text="{Binding Path=ContactData.EditObject.Address, UpdateSourceTrigger=PropertyChanged}"/>
+                    
+                    <TextBlock FontSize="24"
+                               Grid.Row="0"
+                               Grid.Column="1"
+                               Margin="5"
+                               Text="Карта"
+                               TextAlignment="Center"
+                               FontWeight="Bold"
+                               />                        
+                    <Image 
+                            Grid.Row="1"
+                            Grid.Column="1"
+                            VerticalAlignment="Top"
+                            HorizontalAlignment="Center"
+                            Width="Auto"
+                            Height="Auto"
+                            Margin="3"
+                            Source="{Binding Path=ContactData.EditObject.Image, TargetNullValue={StaticResource DefaultImage}}"/>
+                    <Button Content="Выберите изображение"
+                            Grid.Row="2"
+                            Grid.Column="1"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            ToolTip="Выберите изображение"
+                            Background="Blue"
+                            Foreground="White"
+                            Height="30"                                
+                            Width="Auto"
+                            Margin="3"
+                            Command="{Binding Path=SelectImageCommand}"
+                            CommandParameter="{Binding Path=ContactData.EditObject}"
+                            />
+
+                    <TextBlock FontSize="24"
+                               Grid.Row="3"
+                               Grid.Column="0"
+                               Grid.ColumnSpan="2"
+                               Margin="5"
+                               Text="Добавить/редактировать ссылки"
+                               TextAlignment="Center"
+                               FontWeight="Bold"
+                               />
+
+                    <!--Ссылки на соц сети-->
+                    <ListBox
+                            Grid.Row="4"
+                            Grid.Column="0"
+                            Grid.ColumnSpan="2"
+                            VerticalAlignment="Stretch"
+                            HorizontalAlignment="Stretch"
+                            ItemsSource="{Binding Path=ContactData.EditObject.Links}"
+                            ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                            Background="Transparent"
+                            BorderBrush="Transparent"
+                        >
+                        <ListBox.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel Orientation="Vertical"
+                                            VerticalAlignment="Top" 
+                                            HorizontalAlignment="Center">
+                                </StackPanel>
+                            </ItemsPanelTemplate>
+                        </ListBox.ItemsPanel>
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="40"/>
+                                        <ColumnDefinition Width="40"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="40"/>
+                                    </Grid.ColumnDefinitions>
+                                    <!--Выбор рисунка для ссылки-->
+                                    <Image 
+                                           Grid.Column="0"
+                                           Height="35"
+                                           Width="35"
+                                           HorizontalAlignment="Center"
+                                           Source="{Binding Image, TargetNullValue={StaticResource DefaultImage}}"
+                                           />
+                                    <Button
+                                        Grid.Column="1"
+                                        Background="Blue"
+                                        Foreground="White"
+                                        Height="35"
+                                        Width="35"
+                                        Margin="2"
+                                        ToolTip="Выбрать изображение"
+                                        Content="+"
+                                        Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}, Path=DataContext.SelectImageCommand}"
+                                        CommandParameter="{Binding}"/>
+                                    <!--Ввод ссылки-->
+                                    <TextBox 
+                                             HorizontalAlignment="Stretch"
+                                             Grid.Column="2"
+                                             Margin="2"
+                                             Width="400"
+                                             Text="{Binding Path=Description}"
+                                             VerticalAlignment="Center">
+                                        <TextBox.Style>
+                                            <Style TargetType="TextBox" xmlns:sys="clr-namespace:System;assembly=mscorlib">
+                                                <Style.Resources>
+                                                    <VisualBrush x:Key="CueBannerBrush" AlignmentX="Left" AlignmentY="Center" Stretch="None">
+                                                        <VisualBrush.Visual>
+                                                            <Label Content="Ссылка" Foreground="LightGray" />
+                                                        </VisualBrush.Visual>
+                                                    </VisualBrush>
+                                                </Style.Resources>
+                                                <Style.Triggers>
+                                                    <Trigger Property="Text" Value="{x:Static sys:String.Empty}">
+                                                        <Setter Property="Background" Value="{StaticResource CueBannerBrush}" />
+                                                    </Trigger>
+                                                    <Trigger Property="Text" Value="{x:Null}">
+                                                        <Setter Property="Background" Value="{StaticResource CueBannerBrush}" />
+                                                    </Trigger>
+                                                    <Trigger Property="IsKeyboardFocused" Value="True">
+                                                        <Setter Property="Background" Value="White" />
+                                                    </Trigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </TextBox.Style>
+                                    </TextBox>
+                                    <!--Удалитиь ссылку-->
+                                    <Button
+                                        Grid.Column="3"
+                                        Background="#dc3545"
+                                        Foreground="White"
+                                        Height="35"
+                                        Width="35"
+                                        Margin="2"
+                                        ToolTip="Удалить ссылку"
+                                        Content="X"
+                                        Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}, Path=DataContext.RemoveContactLinkCommand}"
+                                        CommandParameter="{Binding}"/>
+                                </Grid>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                        <ListBox.ItemContainerStyle>
+                            <Style TargetType="ListBoxItem">
+                                <Setter Property="Focusable" Value="False" />
+                            </Style>
+                        </ListBox.ItemContainerStyle>
+                    </ListBox>
+                    
+                    <Button Content="+ Добавить еще"
+                            Grid.Row="5"
+                            Grid.Column="0"
+                            Grid.ColumnSpan="2"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            ToolTip="+ Добавить еще"
+                            Background="Blue"
+                            Foreground="White"
+                            Height="30"                                
+                            Width="100"
+                            Margin="3"
+                            Visibility="{Binding Path=IsAuthorized, Converter={StaticResource BoolVisibilityConverter}}"
+                            Command="{Binding Path=AddContactLinkCommand}"
+                            />
+                    <Button Content="Сохранить"
+                            Grid.Row="6"
+                            Grid.Column="0"
+                            Grid.ColumnSpan="2"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Center"
+                            ToolTip="Сохранить"
+                            Background="Blue"
+                            Foreground="White"
+                            Height="30"                                
+                            Width="100"
+                            Margin="3"
+                            Visibility="{Binding Path=IsAuthorized, Converter={StaticResource BoolVisibilityConverter}}"
+                            Command="{Binding Path=SaveChangeContactCommand}"
+                            />
+                </Grid>
+            </ScrollViewer>
+            </TabItem>
+
+            <!--12 Авторизация-->
+            <TabItem IsTabStop="False"
+                 Visibility ="Collapsed">
+                <StackPanel Orientation="Vertical"
+                            VerticalAlignment="Center"
+                            HorizontalAlignment="Center"
+                            Width="500">
+                    <TextBlock Text="Авторизация"
+                               FontSize="20"
+                               HorizontalAlignment="Center"/>
+                    <Grid HorizontalAlignment="Center">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="50"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="10"/>
+                            <RowDefinition Height="35"/>
+                            <RowDefinition Height="35"/>
+                            <RowDefinition Height="10"/>
+                        </Grid.RowDefinitions>
+                        <TextBlock Grid.Row="1"
+                                   Grid.Column="0"
+                                   Text="Логин" 
+                                   FontSize="14" 
+                                   VerticalAlignment="Center"
+                                   />
+                        <TextBox
+                                 Grid.Row="1"
+                                 Grid.Column="1"
+                                 Margin="3"
+                                 Width="350"
+                                 VerticalAlignment="Center"
+                                 Text="{Binding Path=CurrentAuthorizationLogin}"/>
+
+                        <TextBlock Grid.Row="2"
+                                   Grid.Column="0"
+                                   Text="Пароль" 
+                                   FontSize="14" 
+                                   VerticalAlignment="Center"/>
+                        <PasswordBox 
+                            x:Name="pbCurrentAuthorizationPassword"
+                            VerticalAlignment="Center"
+                                    Grid.Row="2"
+                                    Grid.Column="1"
+                                    Margin="3"
+                                    Width="350"
+                                 />
+                    </Grid>
+
+                    <StackPanel Orientation="Horizontal"
+                                HorizontalAlignment="Center">
+                        <Button 
+                                Background="Blue"
+                                Foreground="White"
+                                Content="Ok" 
+                                Margin="5" 
+                                Width="100"
+                                Command="{Binding Path=AuthorizationCommand}"
+                                />
+
+                        <Button                             
+                                Background="Blue"
+                                Foreground="White"
+                                Margin="5"
+                                Width="100" 
+                                Content="Отмена"
+                                Command="{Binding Path=CancelAuthorizationCommand}"
+                                />
+                    </StackPanel>
+                </StackPanel>
+            </TabItem>
+            
+            <!--13 Регистрация пользователя-->
+            <TabItem IsTabStop="False"
+                 Visibility ="Collapsed">
+                <StackPanel Orientation="Vertical"
+                            VerticalAlignment="Center"
+                            HorizontalAlignment="Center"
+                            Width="500">
+                    <TextBlock Text="Регистрация пользователя"
+                               FontSize="20"
+                               HorizontalAlignment="Center"/>
+                    <Grid HorizontalAlignment="Center">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="130"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="10"/>
+                            <RowDefinition Height="35"/>
+                            <RowDefinition Height="35"/>
+                            <RowDefinition Height="35"/>
+                            <RowDefinition Height="10"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <TextBlock Grid.Row="1"
+                                   Grid.Column="0"
+                                   Text="Логин" 
+                                   FontSize="14" 
+                                   VerticalAlignment="Center"/>
+                        <TextBox
+                                 Grid.Row="1"
+                                 Grid.Column="1"
+                                 Margin="3"
+                                 Width="350"
+                                 Text="{Binding Path=AddUserLogin}"/>
+
+                        <TextBlock Grid.Row="2"
+                                   Grid.Column="0"
+                                   Text="Пароль" 
+                                   FontSize="14" 
+                                   VerticalAlignment="Center"/>
+                        <PasswordBox 
+                            x:Name="pbAddUserPassword"
+                                    Grid.Row="2"
+                                    Grid.Column="1"
+                                    Margin="3"
+                                    Width="350"
+                                 />
+
+                        <TextBlock Grid.Row="3"
+                                   Grid.Column="0"
+                                   Text="Повторить пароль" 
+                                   FontSize="14" 
+                                   VerticalAlignment="Center"/>
+                        <PasswordBox 
+                            x:Name="pbAddUserConfirmPassword"
+                                    Grid.Row="3"
+                                    Grid.Column="1"
+                                    Margin="3"
+                                    Width="350"
+                                 />                  
+
+                        <DockPanel HorizontalAlignment="Center"
+                                    Grid.Row="5"
+                                    Grid.Column="0"
+                                   Grid.ColumnSpan="2">
+                            <Button                             
+                                    Background="Blue"
+                                    Foreground="White"
+                                    Content="Ok" 
+                                    Margin="5" 
+                                    Width="100"
+                                    Command="{Binding Path=AddUserCommand}"
+                                    />
+                            <Button 
+                                    Background="Blue"
+                                    Foreground="White"
+                                    Margin="5"
+                                    Width="100" 
+                                    Content="Отмена"
+                                    Command="{Binding Path=CancelUserCommand}"
+                                    />
+                        </DockPanel>                        
+                   </Grid>
+                </StackPanel>
+            </TabItem>
+
+            <!--14 Список пользователей-->
+            <TabItem IsTabStop="False"
+                 Visibility ="Collapsed">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="50"/>
+                    </Grid.RowDefinitions>
+                    <DataGrid   
+                            Grid.Row="0"
+                            Grid.Column="0"
+                            AutoGenerateColumns="false"
+                            VerticalAlignment="Stretch"
+                            HorizontalAlignment="Stretch"
+                            Margin="5"
+                            CanUserAddRows="False"
+                            CanUserDeleteRows="False"
+                            SelectionMode="Single"
+                            SelectedItem="{Binding SelectedUser}"
+                            ItemsSource ="{Binding UserList}">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn 
+                                                Header="Логин пользователя"
+                                                IsReadOnly="True"
+                                                MinWidth="30"
+                                                Width="*"
+                                                Binding="{Binding Path=Login}" />
+                        </DataGrid.Columns>
+                    </DataGrid>
+                    <StackPanel Orientation="Horizontal"
+                            VerticalAlignment="Center"
+                            HorizontalAlignment="Center"
+                            Grid.Row="1"
+                            Grid.Column="0">
+                        <Button Margin="5"
+                                Background="Blue"
+                                Foreground="White"
+                                Width="150" 
+                                Content="Добавить пользователя"
+                                Command="{Binding Path=ShowAddUserCommand}"
+                                />
+                        <Button Margin="5"
+                                Background="Blue"
+                                Foreground="White"
+                                Width="150" 
+                                Content="Удалить пользователя"
+                                Command="{Binding Path=RemoveUserCommand}"
+                                />
+                        <!--Button Margin="5"
+                            Width="150" 
+                            Background="Blue"
+                            Foreground="White"
+                            Content="Назад"
+                            Command="{Binding Path=SaveUserCommand}"
+                            /-->
+                    </StackPanel>
+                </Grid>
+            </TabItem>
+
+            <!--15 Вкладка Редактирование названий меню-->
+            <TabItem IsTabStop="False"
+                Visibility ="Collapsed">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="50*"/>
+                        <ColumnDefinition Width="50*"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock FontSize="24"
+                               Grid.Row="0"
+                               Grid.Column="0"
+                               Grid.ColumnSpan="2"
+                               Margin="5"
+                               Text="Добавить/редактировать"
+                               TextAlignment="Center"
+                               FontWeight="Bold"
+                               />
+                    <StackPanel Orientation="Vertical"
+                                Grid.Row="1"
+                                Grid.Column="0">
+                        <TextBlock  FontSize="24"
+                                    HorizontalAlignment="Center"
+                                    Margin="5"
+                                    Text="Название меню"
+                                    TextAlignment="Center"
+                               />
+                        <TextBox 
+                                HorizontalAlignment="Stretch"
+                                Margin="5"
+                                Text="{Binding Path=MenuNameAndPageHeaderData.EditObject.MainPage}"
+                                VerticalAlignment="Center">
+                            <TextBox.Style>
+                                <Style TargetType="TextBox" xmlns:sys="clr-namespace:System;assembly=mscorlib">
+                                    <Style.Resources>
+                                        <VisualBrush x:Key="CueBannerBrush" AlignmentX="Left" AlignmentY="Center" Stretch="None">
+                                            <VisualBrush.Visual>
+                                                <Label Content="Название меню &quot;Главная страница&quot;" Foreground="LightGray" />
+                                            </VisualBrush.Visual>
+                                        </VisualBrush>
+                                    </Style.Resources>
+                                    <Style.Triggers>
+                                        <Trigger Property="Text" Value="{x:Static sys:String.Empty}">
+                                            <Setter Property="Background" Value="{StaticResource CueBannerBrush}" />
+                                        </Trigger>
+                                        <Trigger Property="Text" Value="{x:Null}">
+                                            <Setter Property="Background" Value="{StaticResource CueBannerBrush}" />
+                                        </Trigger>
+                                        <Trigger Property="IsKeyboardFocused" Value="True">
+                                            <Setter Property="Background" Value="White" />
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBox.Style>
+                        </TextBox>
+                        <TextBox 
+                                HorizontalAlignment="Stretch"
+                                Margin="5"
+                                Text="{Binding Path=MenuNameAndPageHeaderData.EditObject.ProjectPage}"
+                                VerticalAlignment="Center">
+                            <TextBox.Style>
+                                <Style TargetType="TextBox" xmlns:sys="clr-namespace:System;assembly=mscorlib">
+                                    <Style.Resources>
+                                        <VisualBrush x:Key="CueBannerBrush" AlignmentX="Left" AlignmentY="Center" Stretch="None">
+                                            <VisualBrush.Visual>
+                                                <Label Content="Название меню &quot;Проекты&quot;" Foreground="LightGray" />
+                                            </VisualBrush.Visual>
+                                        </VisualBrush>
+                                    </Style.Resources>
+                                    <Style.Triggers>
+                                        <Trigger Property="Text" Value="{x:Static sys:String.Empty}">
+                                            <Setter Property="Background" Value="{StaticResource CueBannerBrush}" />
+                                        </Trigger>
+                                        <Trigger Property="Text" Value="{x:Null}">
+                                            <Setter Property="Background" Value="{StaticResource CueBannerBrush}" />
+                                        </Trigger>
+                                        <Trigger Property="IsKeyboardFocused" Value="True">
+                                            <Setter Property="Background" Value="White" />
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBox.Style>
+                        </TextBox>
+                        <TextBox 
+                                HorizontalAlignment="Stretch"
+                                Margin="5"
+                                Text="{Binding Path=MenuNameAndPageHeaderData.EditObject.ServicePage}"
+                                VerticalAlignment="Center">
+                            <TextBox.Style>
+                                <Style TargetType="TextBox" xmlns:sys="clr-namespace:System;assembly=mscorlib">
+                                    <Style.Resources>
+                                        <VisualBrush x:Key="CueBannerBrush" AlignmentX="Left" AlignmentY="Center" Stretch="None">
+                                            <VisualBrush.Visual>
+                                                <Label Content="Название меню &quot;Услуги&quot;" Foreground="LightGray" />
+                                            </VisualBrush.Visual>
+                                        </VisualBrush>
+                                    </Style.Resources>
+                                    <Style.Triggers>
+                                        <Trigger Property="Text" Value="{x:Static sys:String.Empty}">
+                                            <Setter Property="Background" Value="{StaticResource CueBannerBrush}" />
+                                        </Trigger>
+                                        <Trigger Property="Text" Value="{x:Null}">
+                                            <Setter Property="Background" Value="{StaticResource CueBannerBrush}" />
+                                        </Trigger>
+                                        <Trigger Property="IsKeyboardFocused" Value="True">
+                                            <Setter Property="Background" Value="White" />
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBox.Style>
+                        </TextBox>
+                        <TextBox 
+                                HorizontalAlignment="Stretch"
+                                Margin="5"
+                                Text="{Binding Path=MenuNameAndPageHeaderData.EditObject.BlogPage}"
+                                VerticalAlignment="Center">
+                            <TextBox.Style>
+                                <Style TargetType="TextBox" xmlns:sys="clr-namespace:System;assembly=mscorlib">
+                                    <Style.Resources>
+                                        <VisualBrush x:Key="CueBannerBrush" AlignmentX="Left" AlignmentY="Center" Stretch="None">
+                                            <VisualBrush.Visual>
+                                                <Label Content="Название меню &quot;Блог&quot;" Foreground="LightGray" />
+                                            </VisualBrush.Visual>
+                                        </VisualBrush>
+                                    </Style.Resources>
+                                    <Style.Triggers>
+                                        <Trigger Property="Text" Value="{x:Static sys:String.Empty}">
+                                            <Setter Property="Background" Value="{StaticResource CueBannerBrush}" />
+                                        </Trigger>
+                                        <Trigger Property="Text" Value="{x:Null}">
+                                            <Setter Property="Background" Value="{StaticResource CueBannerBrush}" />
+                                        </Trigger>
+                                        <Trigger Property="IsKeyboardFocused" Value="True">
+                                            <Setter Property="Background" Value="White" />
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBox.Style>
+                        </TextBox>
+                        <TextBox 
+                                HorizontalAlignment="Stretch"
+                                Margin="5"
+                                Text="{Binding Path=MenuNameAndPageHeaderData.EditObject.ContactPage}"
+                                VerticalAlignment="Center">
+                            <TextBox.Style>
+                                <Style TargetType="TextBox" xmlns:sys="clr-namespace:System;assembly=mscorlib">
+                                    <Style.Resources>
+                                        <VisualBrush x:Key="CueBannerBrush" AlignmentX="Left" AlignmentY="Center" Stretch="None">
+                                            <VisualBrush.Visual>
+                                                <Label Content="Название меню &quot;Контакты&quot;" Foreground="LightGray" />
+                                            </VisualBrush.Visual>
+                                        </VisualBrush>
+                                    </Style.Resources>
+                                    <Style.Triggers>
+                                        <Trigger Property="Text" Value="{x:Static sys:String.Empty}">
+                                            <Setter Property="Background" Value="{StaticResource CueBannerBrush}" />
+                                        </Trigger>
+                                        <Trigger Property="Text" Value="{x:Null}">
+                                            <Setter Property="Background" Value="{StaticResource CueBannerBrush}" />
+                                        </Trigger>
+                                        <Trigger Property="IsKeyboardFocused" Value="True">
+                                            <Setter Property="Background" Value="White" />
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBox.Style>
+                        </TextBox>                        
+                    </StackPanel>
+                    <StackPanel Orientation="Vertical"
+                                Grid.Row="1"
+                                Grid.Column="1">
+                        <TextBlock  FontSize="24"
+                                    HorizontalAlignment="Center"
+                                    Margin="5"
+                                    Text="Заголовок страницы"
+                                    TextAlignment="Center"
+                               />
+                        <TextBox 
+                                HorizontalAlignment="Stretch"
+                                Margin="5"
+                                Text="{Binding Path=MenuNameAndPageHeaderData.EditObject.MainPageHeader}"
+                                VerticalAlignment="Center">
+                            <TextBox.Style>
+                                <Style TargetType="TextBox" xmlns:sys="clr-namespace:System;assembly=mscorlib">
+                                    <Style.Resources>
+                                        <VisualBrush x:Key="CueBannerBrush" AlignmentX="Left" AlignmentY="Center" Stretch="None">
+                                            <VisualBrush.Visual>
+                                                <Label Content="Заголовок страницы &quot;Главная страница&quot;" Foreground="LightGray" />
+                                            </VisualBrush.Visual>
+                                        </VisualBrush>
+                                    </Style.Resources>
+                                    <Style.Triggers>
+                                        <Trigger Property="Text" Value="{x:Static sys:String.Empty}">
+                                            <Setter Property="Background" Value="{StaticResource CueBannerBrush}" />
+                                        </Trigger>
+                                        <Trigger Property="Text" Value="{x:Null}">
+                                            <Setter Property="Background" Value="{StaticResource CueBannerBrush}" />
+                                        </Trigger>
+                                        <Trigger Property="IsKeyboardFocused" Value="True">
+                                            <Setter Property="Background" Value="White" />
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBox.Style>
+                        </TextBox>
+                        <TextBox 
+                                HorizontalAlignment="Stretch"
+                                Margin="5"
+                                Text="{Binding Path=MenuNameAndPageHeaderData.EditObject.ProjectPageHeader}"
+                                VerticalAlignment="Center">
+                            <TextBox.Style>
+                                <Style TargetType="TextBox" xmlns:sys="clr-namespace:System;assembly=mscorlib">
+                                    <Style.Resources>
+                                        <VisualBrush x:Key="CueBannerBrush" AlignmentX="Left" AlignmentY="Center" Stretch="None">
+                                            <VisualBrush.Visual>
+                                                <Label Content="Заголовок страницы &quot;Проекты&quot;" Foreground="LightGray" />
+                                            </VisualBrush.Visual>
+                                        </VisualBrush>
+                                    </Style.Resources>
+                                    <Style.Triggers>
+                                        <Trigger Property="Text" Value="{x:Static sys:String.Empty}">
+                                            <Setter Property="Background" Value="{StaticResource CueBannerBrush}" />
+                                        </Trigger>
+                                        <Trigger Property="Text" Value="{x:Null}">
+                                            <Setter Property="Background" Value="{StaticResource CueBannerBrush}" />
+                                        </Trigger>
+                                        <Trigger Property="IsKeyboardFocused" Value="True">
+                                            <Setter Property="Background" Value="White" />
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBox.Style>
+                        </TextBox>
+                        <TextBox 
+                                HorizontalAlignment="Stretch"
+                                Margin="5"
+                                Text="{Binding Path=MenuNameAndPageHeaderData.EditObject.ServicePageHeader}"
+                                VerticalAlignment="Center">
+                            <TextBox.Style>
+                                <Style TargetType="TextBox" xmlns:sys="clr-namespace:System;assembly=mscorlib">
+                                    <Style.Resources>
+                                        <VisualBrush x:Key="CueBannerBrush" AlignmentX="Left" AlignmentY="Center" Stretch="None">
+                                            <VisualBrush.Visual>
+                                                <Label Content="Заголовок страницы &quot;Услуги&quot;" Foreground="LightGray" />
+                                            </VisualBrush.Visual>
+                                        </VisualBrush>
+                                    </Style.Resources>
+                                    <Style.Triggers>
+                                        <Trigger Property="Text" Value="{x:Static sys:String.Empty}">
+                                            <Setter Property="Background" Value="{StaticResource CueBannerBrush}" />
+                                        </Trigger>
+                                        <Trigger Property="Text" Value="{x:Null}">
+                                            <Setter Property="Background" Value="{StaticResource CueBannerBrush}" />
+                                        </Trigger>
+                                        <Trigger Property="IsKeyboardFocused" Value="True">
+                                            <Setter Property="Background" Value="White" />
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBox.Style>
+                        </TextBox>
+                        <TextBox 
+                                HorizontalAlignment="Stretch"
+                                Margin="5"
+                                Text="{Binding Path=MenuNameAndPageHeaderData.EditObject.BlogPageHeader}"
+                                VerticalAlignment="Center">
+                            <TextBox.Style>
+                                <Style TargetType="TextBox" xmlns:sys="clr-namespace:System;assembly=mscorlib">
+                                    <Style.Resources>
+                                        <VisualBrush x:Key="CueBannerBrush" AlignmentX="Left" AlignmentY="Center" Stretch="None">
+                                            <VisualBrush.Visual>
+                                                <Label Content="Заголовок страницы &quot;Блог&quot;" Foreground="LightGray" />
+                                            </VisualBrush.Visual>
+                                        </VisualBrush>
+                                    </Style.Resources>
+                                    <Style.Triggers>
+                                        <Trigger Property="Text" Value="{x:Static sys:String.Empty}">
+                                            <Setter Property="Background" Value="{StaticResource CueBannerBrush}" />
+                                        </Trigger>
+                                        <Trigger Property="Text" Value="{x:Null}">
+                                            <Setter Property="Background" Value="{StaticResource CueBannerBrush}" />
+                                        </Trigger>
+                                        <Trigger Property="IsKeyboardFocused" Value="True">
+                                            <Setter Property="Background" Value="White" />
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBox.Style>
+                        </TextBox>
+                        <TextBox 
+                                HorizontalAlignment="Stretch"
+                                Margin="5"
+                                Text="{Binding Path=MenuNameAndPageHeaderData.EditObject.ContactPageHeader}"
+                                VerticalAlignment="Center">
+                            <TextBox.Style>
+                                <Style TargetType="TextBox" xmlns:sys="clr-namespace:System;assembly=mscorlib">
+                                    <Style.Resources>
+                                        <VisualBrush x:Key="CueBannerBrush" AlignmentX="Left" AlignmentY="Center" Stretch="None">
+                                            <VisualBrush.Visual>
+                                                <Label Content="Заголовок страницы &quot;Контакты&quot;" Foreground="LightGray" />
+                                            </VisualBrush.Visual>
+                                        </VisualBrush>
+                                    </Style.Resources>
+                                    <Style.Triggers>
+                                        <Trigger Property="Text" Value="{x:Static sys:String.Empty}">
+                                            <Setter Property="Background" Value="{StaticResource CueBannerBrush}" />
+                                        </Trigger>
+                                        <Trigger Property="Text" Value="{x:Null}">
+                                            <Setter Property="Background" Value="{StaticResource CueBannerBrush}" />
+                                        </Trigger>
+                                        <Trigger Property="IsKeyboardFocused" Value="True">
+                                            <Setter Property="Background" Value="White" />
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBox.Style>
+                        </TextBox>
+                    </StackPanel>
+                    <Button Content="Сохранить"
+                            Grid.Row="2"
+                            Grid.Column="0"
+                            Grid.ColumnSpan="2"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Center"
+                            ToolTip="Сохранить"
+                            Background="Blue"
+                            Foreground="White"
+                            Height="30"                                
+                            Width="100"
+                            Margin="3"
+                            Visibility="{Binding Path=IsAuthorized, Converter={StaticResource BoolVisibilityConverter}}"
+                            Command="{Binding Path= SaveChangeMenuNameAndPageHeaderDataCommand}"
+                            />
+                </Grid>
+            </TabItem>
+
+            <!--16 Вкладка Редактирование списка цитат заголовка-->
+            <TabItem IsTabStop="False"
+                Visibility ="Collapsed">
+                <ScrollViewer
+                    VerticalAlignment="Stretch"
+                    HorizontalAlignment="Stretch"
+                    VerticalScrollBarVisibility="Auto"
+                    HorizontalScrollBarVisibility="Disabled">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <TextBlock FontSize="24"
+                               Grid.Row="0"
+                               Margin="5"
+                               Text="Добавить/редактировать цитаты блока заголовка меню"
+                               TextAlignment="Center"
+                               FontWeight="Bold"
+                               />
+                        <ListBox
+                            Grid.Row="1"
+                            VerticalAlignment="Stretch"
+                            HorizontalAlignment="Stretch"
+                            ItemsSource="{Binding Path=HeaderDescriptionData.DataCollection}"
+                            ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                            Background="Transparent"
+                            BorderBrush="Transparent"
+                        >
+                            <ListBox.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <StackPanel Orientation="Vertical"
+                                            VerticalAlignment="Top" 
+                                            HorizontalAlignment="Center">
+                                    </StackPanel>
+                                </ItemsPanelTemplate>
+                            </ListBox.ItemsPanel>
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                             <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="40"/>
+                                        </Grid.ColumnDefinitions>
+                                        <!--Ввод Цитаты-->
+                                        <TextBox 
+                                             HorizontalAlignment="Stretch"
+                                             Grid.Column="0"
+                                             Margin="2"
+                                             Width="400"
+                                             Text="{Binding Path=Description}"
+                                             VerticalAlignment="Center">
+                                            <TextBox.Style>
+                                                <Style TargetType="TextBox" xmlns:sys="clr-namespace:System;assembly=mscorlib">
+                                                    <Style.Resources>
+                                                        <VisualBrush x:Key="CueBannerBrush" AlignmentX="Left" AlignmentY="Center" Stretch="None">
+                                                            <VisualBrush.Visual>
+                                                                <Label Content="Фраза блока заголовка меню" Foreground="LightGray" />
+                                                            </VisualBrush.Visual>
+                                                        </VisualBrush>
+                                                    </Style.Resources>
+                                                    <Style.Triggers>
+                                                        <Trigger Property="Text" Value="{x:Static sys:String.Empty}">
+                                                            <Setter Property="Background" Value="{StaticResource CueBannerBrush}" />
+                                                        </Trigger>
+                                                        <Trigger Property="Text" Value="{x:Null}">
+                                                            <Setter Property="Background" Value="{StaticResource CueBannerBrush}" />
+                                                        </Trigger>
+                                                        <Trigger Property="IsKeyboardFocused" Value="True">
+                                                            <Setter Property="Background" Value="White" />
+                                                        </Trigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </TextBox.Style>
+                                        </TextBox>
+                                        <!--Удалитиь ссылку-->
+                                        <Button
+                                        Grid.Column="1"
+                                        Background="#dc3545"
+                                        Foreground="White"
+                                        Height="35"
+                                        Width="35"
+                                        Margin="2"
+                                        ToolTip="Удалить цитату"
+                                        Content="X"
+                                        Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}, Path=DataContext.RemoveHeaderDescriptionCommand}"
+                                        CommandParameter="{Binding}"/>
+                                    </Grid>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                            <ListBox.ItemContainerStyle>
+                                <Style TargetType="ListBoxItem">
+                                    <Setter Property="Focusable" Value="False" />
+                                </Style>
+                            </ListBox.ItemContainerStyle>
+                        </ListBox>
+                        <Button Content="+ Добавить еще"
+                            Grid.Row="2"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            ToolTip="+ Добавить еще"
+                            Background="Blue"
+                            Foreground="White"
+                            Height="30"                                
+                            Width="100"
+                            Margin="3"
+                            Visibility="{Binding Path=IsAuthorized, Converter={StaticResource BoolVisibilityConverter}}"
+                            Command="{Binding Path=AddHeaderDescriptionCommand}"
+                            />
+                        <Button Content="Сохранить"
+                            Grid.Row="3"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Center"
+                            ToolTip="Сохранить"
+                            Background="Blue"
+                            Foreground="White"
+                            Height="30"                                
+                            Width="100"
+                            Margin="3"
+                            Visibility="{Binding Path=IsAuthorized, Converter={StaticResource BoolVisibilityConverter}}"
+                            Command="{Binding Path=SaveHeaderDescriptionCommand}"
+                            />
+                    </Grid>
+                </ScrollViewer>
+            </TabItem>
+
+        </TabControl>
+
+        <!--Загрузка данных-->
+        <TextBlock Text="Подождите! Выполняется загрузка данных..."
+                   Grid.Column="2"
+                   Grid.Row="2"
+                   FontSize="25"
+                   Margin="3"
+                   Foreground="Red"
+                   FontWeight="Bold"
+                   TextAlignment ="Center"
+                   Visibility="{Binding Path=IsLoadData, Converter={StaticResource BoolVisibilityConverter}}"
+                   />
+
+    </Grid>
+</Window>

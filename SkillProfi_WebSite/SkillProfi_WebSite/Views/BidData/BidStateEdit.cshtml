@@ -1,0 +1,30 @@
+﻿@using SkillProfi_Shared
+@model Bid
+@{
+    ViewData["Title"] = "Изменение статуса заявки №" + Model.Id.ToString();
+    if (User.Identity.IsAuthenticated && User.IsInRole("administrator"))
+        Layout = "_Layout_Admin";
+    else
+        Layout = "_Layout_General";
+
+}
+<div class="container align-items-center">
+    <h2>Изменение статуса заявки № @Model.Id</h2>
+
+    <form asp-action="EditBidStatus" asp-controller="BidData" method="post">
+        <input type="hidden" name="Id" value="@Model.Id" />
+        <div class="row mb-3 mt-3">
+            <div class="form-check">
+                @foreach (BidStatusEnum bidStatus in Enum.GetValues(typeof(BidStatusEnum)))
+                {
+                    <input class="form-check-input" type="radio" name="SelectedBidStutus" value="@bidStatus"
+                           @(Model.BidStatus == bidStatus ? "checked=\"checked\"" : "") />
+                    @SkillProfiHelper.BidStatusGetName(bidStatus) <br />
+                }
+            </div>
+        </div>
+        <div calass="row mb-3 mt-3">
+            <button type="submit" class="btn btn-primary">Сохранить</button>
+        </div>
+    </form>
+</div>

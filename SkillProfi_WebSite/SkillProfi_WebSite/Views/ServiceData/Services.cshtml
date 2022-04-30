@@ -1,0 +1,52 @@
+﻿@using SkillProfi_Shared
+@model IEnumerable<Service>
+@{
+    ViewData["Title"] = "Список заявок";
+    if (User.Identity.IsAuthenticated && User.IsInRole("administrator"))
+        Layout = "_Layout_Admin";
+    else
+        Layout = "_Layout_General";
+}
+<div class="container">
+    <!--раскрывающийся список-->
+    <div class="accordion" id="accordionFlush">
+        <!--data-bs-parent усли его удалить во всех item аккадиона будет возможность раскрыть все item без сворачивания раскрытых ранее-->
+        @foreach (Service serviceItem in Model)
+        {
+            <!--item аккардиона-->
+            <div class="accordion-item-0 mb-3 mt-3">
+                <!--свернутая панель загаловок-->
+                <!--flush-heading_1 - заменить на уникальное название на данной странице-->
+                <h2 class="accordion-header" id="flush-heading_@serviceItem.Id">
+                    <button class="accordion-button collapsed"
+                            type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapse_@serviceItem.Id" aria-expanded="false" aria-controls="flush-collapse_@serviceItem.Id">
+                        @serviceItem.Header
+                    </button>
+                </h2>
+                <!--развернутая панель при нажатии на кнопку flush-heading_1-->
+                <div id="flush-collapse_@serviceItem.Id" class="accordion-collapse collapse" aria-labelledby="flush-heading_@serviceItem.Id" data-bs-parent="#accordionFlush">
+                    <div class="accordion-body">
+                        @Html.Raw(@serviceItem.Description)
+                    </div>
+                </div>
+            </div>
+            @if (User.Identity.IsAuthenticated && User.IsInRole("administrator"))
+            {
+                <div class="row">
+                    <form asp-action="RemoveService" asp-controller="ServiceData" asp-route-id="@serviceItem.Id" method="post" id="removeform_@serviceItem.Id">
+                        <a href="~/ServiceData/EditService/@serviceItem.Id"><img width="30" height="30" src="~/Images/edit.png" alt="Редактировать" /></a>
+                        <a href="#" onclick="if (confirm('Вы действительно хотите удалить услугу @serviceItem.Header?')) {document.getElementById('removeform_@serviceItem.Id').submit() }">
+                            <img width="30" height="30" src="~/Images/delete.png" alt="Удалить" />
+                        </a>
+                    </form>
+                </div>
+            }
+        }
+    </div>
+    @if (User.Identity.IsAuthenticated && User.IsInRole("administrator"))
+    {
+        <div class="col mb-3 mt-3" align="right" style="right:20%;">
+            <a class="btn btn-primary btn-sm" href="~/ServiceData/CreateService">Добавить услугу</a>
+        </div>
+    }
+</div>

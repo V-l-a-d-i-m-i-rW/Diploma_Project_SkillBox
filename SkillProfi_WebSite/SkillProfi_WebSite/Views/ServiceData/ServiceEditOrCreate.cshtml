@@ -1,0 +1,46 @@
+﻿@using SkillProfi_Shared
+@model Service
+@{
+    if (User.Identity.IsAuthenticated && User.IsInRole("administrator"))
+        Layout = "_Layout_Admin";
+    else
+        Layout = "_Layout_General";
+    string header = Model.Id != 0 ? "Редактирование услуги" : "Добавление услуги";
+    ViewData["Title"] = header;
+}
+<div class="container">
+    <div class="row mb-3 mt-3">
+        <h3 class="text-center">@header</h3>
+    </div>
+    <form method="post" asp-action="EditOrCreateService" asp-controller="ServiceData" asp-antiforgery="true" asp-route-id="@Model.Id" class="form" id="editform">
+        <div class="row mb-3 mt-3">
+            <div class="col">
+                <p>Заголовок услуги</p>
+                <input class="form-control form-control-lg" asp-for="Header" id="HeaderService" type="text"
+                       value="@(Model.Id != 0 ? Model.Header:"")" />
+            </div>
+        </div>
+        <div class="row mb-3 mt-3">
+            <div class="col">
+                <p>Описание Услуги</p>
+                <textarea class="form-control form-control-lg" asp-for="Description" id="DescriptionService" rows="3">@(Model.Id != 0 ? Model.Description:"" )</textarea>
+            </div>
+        </div>
+        <div class="col mb-3 mt-3" align="right">
+            <button class="btn btn-primary" id="btnSubmint" type="submit">@(Model.Id != 0 ? "Сохранить" : "Добавить")</button>
+        </div>
+    </form>
+</div>
+<script src="js\myscript.js"></script>
+<script>
+    var btn = document.getElementById("btnSubmint");
+    var DescriptionElement = document.getElementById("DescriptionService");
+    var HeaderElement = document.getElementById("HeaderService");
+    btn.disabled = true;
+    //подписываемся на событие изменения значения текста
+    DescriptionElement.addEventListener("keyup", ActivateBtn, false);
+    HeaderElement.addEventListener("keyup", ActivateBtn, false);
+    function ActivateBtn() {
+        activateButton([DescriptionElement.value, HeaderElement.value], btn);
+    }
+</script>

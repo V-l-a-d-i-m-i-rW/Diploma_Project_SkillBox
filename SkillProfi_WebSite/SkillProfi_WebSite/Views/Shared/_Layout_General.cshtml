@@ -1,0 +1,71 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <title>@ViewData["Title"]</title>
+    <!-- CSS Bootstrap-->
+    <link href="~/css/styles.css" rel="stylesheet" />
+    <!-- подключение js файла с общими функциями-->
+    <script src="~/js/myscript.js"></script>
+    <script>
+        if (window.navigator.userAgent.indexOf('MSIE ') > -1 || window.navigator.userAgent.indexOf('Trident/') > -1)
+        {
+            alert('Используемый браузер будет некорректно отображать элементы сайта!');
+        }
+    </script>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #0288d1;">
+        <div class="container px-5 py-0">
+            <img width="300" height="204" src="~/images/menu_image.png" alt="меню" />
+            <div class="expand navbar-expand flex-column" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item"><a class="nav-link" href="~/BidData/Index">@(ViewData["MainPage"] != null ? ViewData["MainPage"] : "Главная")</a></li>
+                    <li class="nav-item"><a class="nav-link" href="~/ProjectData/Projects">@(ViewData["ProjectPage"] != null ? ViewData["ProjectPage"] : "Проекты")</a></li>
+                    <li class="nav-item"><a class="nav-link" href="~/ServiceData/Services">@(ViewData["ServicePage"] != null ? ViewData["ServicePage"] : "Услуги")</a></li>
+                    <li class="nav-item"><a class="nav-link" href="~/BlogData/Blogs">@(ViewData["BlogPage"] != null ? ViewData["BlogPage"] : "Блог")</a></li>
+                    <li class="nav-item"><a class="nav-link" href="~/ContactData/Index">@(ViewData["ContactPage"] != null ? ViewData["ContactPage"] : "Контакты")</a></li>
+                </ul>
+                <ul class="navbar-nav flex-row me-auto">
+                    <li>
+                        <h1 class="m-0 text-right text-white">
+                            <!--Цитата-->
+                            <b>@ViewData["QuoteInTheHeader"]</b>
+                        </h1>
+                    </li>
+                </ul>
+                <ul class="navbar-nav flex-row me-auto">
+                    <li class="nav-item"><a class="nav-link" href="~/Account/Login">Вход</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <!--основной контент-->
+    <div class="container px-2 px-lg-2">
+
+        @if (ViewData["Path"] != null && !string.IsNullOrEmpty(ViewData["Path"].ToString()))
+        {
+            <!--Отображаемый путь -->
+            <div><p class="m-0 text-black-50">@ViewData["Path"]</p></div>
+        }
+        @if (ViewData["Header"] != null && !string.IsNullOrEmpty(ViewData["Header"].ToString()))
+        {
+            <!--Заголовок -->
+            <div class="card" style="border:hidden;">
+                <div class="card-header-0" style="padding: 0.5rem 0rem;">
+                    <h1 class="text-primary">@ViewData["Header"]</h1>
+                </div>
+            </div>
+        }
+
+        @RenderBody()
+    </div>
+    <!-- подвал-->
+    <footer class="py-2" style="background-color: #0288d1;">
+        <div class="container px-4 px-lg-5"><p class="m-0 text-center text-white">© 2022 - SkillProfi</p></div>
+    </footer>
+    <!-- Bootstrap core JS-->
+    <script src="~/js/bootstrap_bundle_min.js"></script>
+</body>
+</html>

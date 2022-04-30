@@ -1,0 +1,111 @@
+﻿@using SkillProfi_Shared
+@model IEnumerable<HeaderDescription>
+@{
+    ViewData["Title"] = "Редактирование блока фраз заголовка";
+    if (User.Identity.IsAuthenticated && User.IsInRole("administrator"))
+        Layout = "_Layout_Admin";
+    else
+        Layout = "_Layout_General";
+    int headerDescriptionCount = Model != null ? Model.Count() : 0;
+    int i = 0;
+}
+
+
+
+<div class="container px-1 px-lg-1">
+    <form id="editHeaderform" method="post" asp-action="SaveHeaderDescription" asp-controller="EditInterface" class="form">
+        <h3 class="text-center mt-3">Добавить/редактировать цитаты блока заголовка меню</h3>
+        <div id="form_parent">
+            @if (Model != null)
+            {
+                foreach (HeaderDescription cur_header in Model)
+                {
+                    @*Блок для добаления ссылок  если меняем навание класса class="input-group mt-3" поменять его и в скрипте!!!!!!! *@
+                    <div class="input-group mt-3">
+                        <input type="hidden" name="headers[@i].Id" value="@cur_header.Id" id="hid_@i">
+                        <input class="form-control ms-2 me-2" name="headers[@i].Description" type="text" placeholder="Фраза блока заголовка меню" value="@cur_header.Description" />
+                        <a href="#" onclick="return deleteField(this)" class="btn btn-danger">X</a>
+                    </div>
+                    {
+                        i++;
+                    }
+
+                }
+            }
+
+        </div>
+
+        <div class="row mb-3">
+            <div class="form-group mb-3 mt-3" align="center">
+                <a class="btn btn-primary" onclick="return addField()" href="#">+ Добавить еще</a>
+            </div>
+        </div>
+
+    </form>
+    <div class="form-group mb-3 mt-3" align="right">
+        <a class="btn btn-primary" onclick="document.getElementById('editHeaderform').submit()" href="#">Сохранить</a>
+    </div>
+</div>
+<script>
+    //Добавление и удаление полей
+    var curFieldNameId = @headerDescriptionCount; // Уникальное значение для атрибута name
+
+    function ReplaseElemantName(elem, num) {
+        if (elem) {
+            var elemName = elem.name;
+            if (elemName) {
+                var setElemName = "";
+                if (elemName.endsWith(".Id")) {
+                    setElemName = "headers[" + num + "].Id";
+                }
+                else if (elemName.endsWith(".Description")) {
+                    setElemName = "headers[" + num + "].Description";
+                }
+                if (setElemName) {
+                    //console.log("Было_" + elem.name);
+                    elem.setAttribute("name", setElemName);
+                    //console.log("Стало_" + elem.name);
+                }
+            }
+            if (elem.children) {
+                for (var j = 0; j < elem.children.length; j++) {
+                    ReplaseElemantName(elem.children[j], num);
+                }
+            }
+        }
+    }
+    function deleteField(ele) {
+        // Получаем доступ к ДИВу, содержащему поле
+        var contDiv = ele.parentNode;
+        contDiv.parentNode.removeChild(contDiv);
+        var divs = document.getElementsByClassName("input-group mt-3");
+        if (divs) {
+            for (var i = 0; i < divs.length; i++) {
+                ReplaseElemantName(divs[i], i);
+            }
+        }
+        // Возвращаем false, чтобы не было перехода по сслыке
+        return false;
+    }
+
+    function addField() {
+        // Создаем элемент ДИВ
+        var div = document.createElement("div");
+        //задаем класс элемента DIV
+        div.className = "input-group mt-3";
+        div.ID
+
+        // Добавляем HTML-контент с пом. свойства innerHTML
+        var inner = "<input type=\"hidden\" name=\"headers[" + curFieldNameId + "].Id\" value=\"0\" id=\"hid__" + curFieldNameId + "\">" +
+            "<input class=\"form-control ms-2 me-2\" name=\"headers[" + curFieldNameId + "].Description\" type=\"text\" placeholder=\"Фраза блока заголовка меню\"/>" +
+            "<a onclick=\"return deleteField(this)\" href=\"#\" id=\"button_" + curFieldNameId + "\"class=\"btn btn-danger\">X</a>";
+        //console.log(inner);
+        div.innerHTML = inner;
+        // Добавляем новый узел в конец списка полей
+        document.getElementById("form_parent").appendChild(div);
+        // Увеличиваем ID
+        curFieldNameId++;
+        // Возвращаем false, чтобы не было перехода по сслыке
+        return false;
+    }
+</script>

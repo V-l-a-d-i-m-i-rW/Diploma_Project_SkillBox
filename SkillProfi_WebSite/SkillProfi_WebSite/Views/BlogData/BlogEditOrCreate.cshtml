@@ -1,0 +1,85 @@
+﻿@using SkillProfi_Shared
+@model Blog
+@{
+    if (User.Identity.IsAuthenticated && User.IsInRole("administrator"))
+        Layout = "_Layout_Admin";
+    else
+        Layout = "_Layout_General";
+    string header = Model.Id != 0 ? "Редактирование блога" : "Добавление блога";
+    ViewData["Title"] = header;
+}
+<div class="container">
+    <div class="row mb-3 mt-3">
+        <h3 class="text-center">@header</h3>
+    </div>
+    <form method="post" asp-route-id="@Model.Id" asp-action="EditOrCreateBlog" asp-controller="BlogData" class="form" id="editform" enctype="multipart/form-data">
+        <div class="row mb-3 mt-3">
+            <div class="row">
+                <div class="col-9">
+                    <div class="col">
+                        <p>Название блога</p>
+                        <input class="form-control form-control-lg" asp-for="Header" id="HeaderBlog" type="text"
+                               value="@if (@Model.Id != 0) { @Model.Header} " />
+                    </div>
+                    <div class="col">
+                        <p>Дата</p>
+                        <input type="date" class="form-control form-control-lg" asp-for="Date" id="DateBlog" />
+                    </div>
+                </div>
+                <div class="col-3">
+                    <div class="col" align="center">
+                        <img id="outputImage"
+                             src="@( (Model.Id != 0 && Model.Image?.Length>0) ?  $"data:image/jpeg;base64,{(Convert.ToBase64String(Model.Image))}":"" )" 
+                             class="img-fluid"/>
+                        @* width = "@( (Model.Id != 0 && Model.Image?.Length>0) ? "250px":"auto" )" height = "auto"*@
+                        <label class="btn btn-primary btn-lg mt=3">
+                            <input type="file" asp-for="ImageFormFile" accept=".jpg,.jpeg,.png" onchange="loadFile(event)" style="display: none;">
+                            <span>Выберите изображение</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-9">
+                    <p>Описание блога</p>
+                    <textarea class="form-control form-control-lg" asp-for="Description" id="DescriptionBlog" rows="3">@(Model.Id != 0 ? Model.Description :"")</textarea>
+                </div>
+            </div>
+
+
+        </div>
+        <div class="row mb-3 mt-3">
+            <div class="col" align="right">
+                <button class="btn btn-primary btn-sm" id="saveButton" type="submit">
+                    @(Model.Id != 0 ? "Сохранить" : "Добавить")
+                </button>
+            </div>
+        </div>
+    </form>
+</div>
+<script>
+    //предпросмотр изображения
+    var loadFile = function (event) {
+        var outputImg = document.getElementById('outputImage');
+        outputImg.src = URL.createObjectURL(event.target.files[0]);
+        outputImg.onload = function () {
+            //outputImg.style.width = '250px';
+            //outputImg.style.height = 'auto';
+            ActivateBtn();
+            URL.revokeObjectURL(outputImg.src) // free memory
+        }
+    };
+    //активность кнопки в зависимости от ввода информации
+    var btn = document.getElementById("saveButton");
+    var DescriptionElement = document.getElementById("DescriptionBlog");
+    var HeaderElement = document.getElementById("HeaderBlog");
+    var dateElement = document.getElementById("DateBlog");
+    btn.disabled = true;
+    //подписываемся на событие изменения значения текста
+    DescriptionElement.addEventListener("keyup", ActivateBtn, false);
+    HeaderElement.addEventListener("keyup", ActivateBtn, false);
+    dateElement.addEventListener("change", ActivateBtn, false);
+    function ActivateBtn() {
+        activateButton([DescriptionElement.value, HeaderElement.value, dateElement.value], btn);
+    }
+</script>

@@ -1,0 +1,62 @@
+﻿@using SkillProfi_Shared
+@model IEnumerable<Blog>
+@{
+    ViewData["Title"] = ViewData["Header"]!=null ? ViewData["Header"] : ViewData["BlogPage"];
+    if (User.Identity.IsAuthenticated && User.IsInRole("administrator"))
+        Layout = "_Layout_Admin";
+    else
+        Layout = "_Layout_General";
+}
+
+<div class="container">
+
+    <div class="row gx-4 gx-lg-5">
+        @foreach (Blog blog in Model)
+        {
+            <!-- Карточки width="362" height="200"-->
+            <div class="col-md-3 mb-3 mt-3">
+                <div class="card h-75 " style="border:hidden;">
+                    <div class="card-body text-secondary">
+                        @blog.Date.ToString("dd MMMM yyyy")
+                    </div>
+                    <div class="card-body" style="padding: 0rem 0rem; border: 1px solid rgba(0, 0, 0, 0.125);" align="center">
+                        <a href="~/BlogData/GetBlog/@blog.Id">
+                            <!--"card-img-top"-->
+                            <img class="img-fluid"
+                                 src="@(blog.Image?.Length > 0 ? $"data:image/jpeg;base64,{(Convert.ToBase64String(blog.Image))}":"" )"
+                                 alt="@blog.Header" />
+                        </a>
+                    </div>
+                    <div class="card-body text-center" style="border: 1px solid rgba(0, 0, 0, 0.125);">
+                        <h5><b>@blog.Header</b></h5>
+                    </div>
+                    <div class="card-body" style="border: 1px solid rgba(0, 0, 0, 0.125);">
+                        <p align="justify" style="display: -webkit-box;
+									    -webkit-line-clamp: 5;
+									    -webkit-box-orient: vertical;
+									    overflow: hidden;">
+                            @SkillProfiHelper.GetStringWithOutHtml(blog.Description)
+                        </p>
+                    </div>
+                    @if (User.Identity.IsAuthenticated && User.IsInRole("administrator"))
+                    {
+                        <div class="card-body" align="right">
+                            <form asp-action="RemoveBlog" asp-controller="BlogData" asp-route-id="@blog.Id" method="post" id="removeform_@blog.Id">
+                                <a href="~/BlogData/EditBlog/@blog.Id"><img width="30" height="30" src="~/Images/edit.png" alt="Редактировать" /></a>
+                                <a href="#" onclick="if (confirm('Вы действительно хотите удалить блог @blog.Header?')) {document.getElementById('removeform_@blog.Id').submit() }">
+                                    <img width="30" height="30" src="~/images/delete.png" alt="Удалить" />
+                                </a>
+                            </form>
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+    </div>
+    @if (User.Identity.IsAuthenticated && User.IsInRole("administrator"))
+    {
+        <div class="col mb-3 mt-3" align="right" style="right:20%;">
+            <a class="btn btn-primary btn-sm" href="~/BlogData/CreateBlog">Добавить блог</a>
+        </div>
+    }
+</div>

@@ -1,0 +1,234 @@
+﻿@using SkillProfi_Shared
+@model Contact
+@{
+    ViewData["Title"] = "Изменение контактных данных";
+    if (User.Identity.IsAuthenticated && User.IsInRole("administrator"))
+        Layout = "_Layout_Admin";
+    else
+        Layout = "_Layout_General";
+    int linkCount = Model?.Links != null ? Model.Links.Count() : 0;
+    int i = 0;
+}
+<div class="container px-4 px-lg-5 mb-3">
+    <form id="editcontactform" method="post" asp-action="EditContact" asp-controller="ContactData" class="form" enctype="multipart/form-data">
+        <input type="hidden" name="contact.Id" value="@Model.Id">
+        <div class="row g-0 mt-3">
+            <div class="col  mb-3 mt-3 text-center">
+                <h2>Адрес</h2>
+                <textarea class="form-control" name="contact.Address" rows="3">@Model.Address</textarea>
+            </div>
+            <div class="col mb-3 mt-3" align="center">
+                <div class="row me-3 ms-3 mb-2">
+                    <h2>Карта</h2>
+                    <img id="outputImage_input_map"
+                         class="img-fluid"
+                         style="display: inline-block;"
+                         src="@(Model.Image?.Length > 0 ? $"data:image/jpeg;base64,{(Convert.ToBase64String(Model.Image))}":"" )" 
+                         />
+                </div>
+                <div class="row me-3 ms-3">
+                    <label class="btn btn-primary btn-lm ms-2 me-2">
+                        <input type="file" name="contact.ImageFormFile" accept=".jpg,.jpeg,.png" onchange="loadFile(event, true)" style="display: none;" id="input_map">
+                        <span>Выбрать изображение</span>
+                    </label>
+                </div>
+            </div>
+        </div>
+        <h3 class="text-center">Добавить/редактировать ссылки</h3>
+        @*редактирование ссылок**@
+        <div id="form_parent">
+            @if (Model?.Links != null)
+            {
+                foreach (ContactLink cur_link in Model?.Links)
+                {
+                    @*Блок для добаления ссылок  если меняем навание класса class="input-group mt-3" поменять его и в скрипте!!!!!!! *@
+                    <div class="input-group mt-3">
+                        <input type="hidden" name="contact.Links[@i].Id" value="@cur_link.Id" id="hid_@i">
+                        <img id="outputImage_input_@i"
+                             class="img-fluid"
+                             src="@(cur_link.Image?.Length > 0 ? $"data:image/jpeg;base64,{(Convert.ToBase64String(cur_link.Image))}":"" )" 
+                             width = "@(Model.Image?.Length > 0 ?"35px":"auto" )"/>
+                        <label class="btn btn-primary btn-lm ms-2 me-2">
+                            <input type="file" name="contact.Links[@i].ImageFormFile" accept=".jpg,.jpeg,.png" onchange="loadFile(event)" style="display: none;" id="input_@i">
+                            <span>+</span>
+                        </label>
+                        <input class="form-control ms-2 me-2" name="contact.Links[@i].Description" type="text" placeholder="Ссылка" value="@cur_link.Description"/>
+                        <a href="#" onclick="return deleteField(this)" class="btn btn-danger">X
+                            @*<img width="35" height="35" src="~/Images/delete.png" alt="Удалить" />*@
+                        </a>
+                    </div>
+                    {
+                        i++;
+                    }
+
+                }
+            }
+        </div>
+        <div class="row mb-3">
+            <div class="form-group mb-3 mt-3" align="center">
+                <a class="btn btn-primary" onclick="return addField()" href="#">+ Добавить еще</a>
+            </div>
+        </div>
+
+    </form>
+
+    <div class="form-group mb-3 mt-3" align="right">
+        <a class="btn btn-primary" href="#" onclick="document.getElementById('editcontactform').submit()">Сохранить</a>
+    </div>
+</div>
+
+<script>
+    //отображение миниатюры загруженного файла
+    var loadFile = function (event, q) {
+        //определение id элемента вызвавшего событие
+        event.preventDefault();
+        var idFlight = event.target.id;
+        //console.log(idFlight);
+        var outputImg = document.getElementById('outputImage_' + idFlight);
+        outputImg.src = URL.createObjectURL(event.target.files[0]);
+        outputImg.onload = function () {
+            if (!q) {
+                outputImg.style.width = '35px';
+                outputImg.style.height = 'auto';
+            }
+            URL.revokeObjectURL(outputImg.src) // free memory
+        }
+    };
+
+    
+    //замена имен елементов
+    function ReplaseElemantName(elem, num)
+    {
+        if (elem)
+        {
+            var elemName = elem.name;
+            if (elemName)
+            {
+                var setElemName = "";
+                if (elemName.endsWith(".Id"))
+                {
+                    setElemName = "contact.Links[" + num + "].Id";
+                }
+                else if (elemName.endsWith(".ImageFormFile"))
+                {
+                    setElemName = "contact.Links[" + num + "].ImageFormFile";
+                }
+                else if (elemName.endsWith(".Description"))
+                {
+                    setElemName = "contact.Links[" + num + "].Description";
+                }
+                if (setElemName)
+                {
+                    //console.log("Было_" + elem.name);
+                    elem.setAttribute("name", setElemName);
+                    //console.log("Стало_" + elem.name);
+                }
+            }
+            if (elem.children)
+            {
+                for (var j = 0; j < elem.children.length; j++)
+                {
+                    ReplaseElemantName(elem.children[j], num);
+                }
+            }
+        }
+    }
+
+    //Добавление и удаление полей
+    var curFieldNameId = @linkCount; // Уникальное значение для атрибута name
+
+    function deleteField(ele) {
+        // Получаем доступ к ДИВу, содержащему поле
+        var contDiv = ele.parentNode;
+        // Удаляем этот ДИВ из DOM-дерева
+        contDiv.parentNode.removeChild(contDiv);
+        var divs = document.getElementsByClassName("input-group mt-3");
+        if (divs) {
+            for (var i = 0; i < divs.length; i++) {
+                ReplaseElemantName(divs[i], i);
+            }
+        }
+        // Возвращаем false, чтобы не было перехода по сслыке
+        return false;
+    }
+
+    function addField() {
+
+        // Создаем элемент ДИВ
+        var div = document.createElement("div");
+        //задаем класс элемента DIV
+        div.className = "input-group mt-3";
+        // Добавляем HTML-контент с пом. свойства innerHTML
+        var inner = "<input type=\"hidden\" name=\"contact.Links[" + curFieldNameId+"].Id\" value=\"0\" id=\"hid__" + curFieldNameId + "\">" +
+            "<img id=\"outputImage_input_" + curFieldNameId + "\" class=\"img-fluid\"/>" +
+            "<label class=\"btn btn-primary btn-lm ms-2 me-2\">" +
+            "<input type=\"file\" name=\"contact.Links[" + curFieldNameId+"].ImageFormFile\" accept=\".jpg,.jpeg,.png\" onchange=\"loadFile(event)\" style=\"display: none;\" id=\"input_" + curFieldNameId + "\">" +
+            "<span>+</span>" +
+            "</label>" +
+            "<input class=\"form-control ms-2 me-2\" name=\"contact.Links[" + curFieldNameId+"].Description\" type=\"text\" placeholder=\"Ссылка\"/>" +
+            "<a onclick=\"return deleteField(this)\" href=\"#\" id=\"button_" + curFieldNameId + "\"class=\"btn btn-danger\">X" +
+            //"<img width=\"35px\" height=\"35px\" src=\"Images/delete.png\" alt=\"Удалить\" />" +
+            "</a>";
+        //data:image/jpeg;base64,0x89504E470D0A1A0A0000000D4948445200000200000002000806000000F478D4FA0000000473424954080808087C086488000000097048597300000EC400000EC401952B0E1B0000001974455874536F667477617265007777772E696E6B73636170652E6F72679BEE3C1A0000200049444154789CECBD79BC2545793EFE549F
+        //console.log(inner);
+        div.innerHTML = inner;
+        // Добавляем новый узел в конец списка полей
+        document.getElementById("form_parent").appendChild(div);
+        // Увеличиваем ID
+        curFieldNameId++;
+        // Возвращаем false, чтобы не было перехода по сслыке
+        return false;
+    }
+
+    //отправка post запроса на удаление
+    /* Данная функция создаёт кроссбраузерный объект XMLHTTP */
+    /* function getXmlHttp() {
+        var xmlhttp;
+        try {
+            xmlhttp = new ActiveXObject("Msxml2.XMLHTTP");
+        } catch (e) {
+            try {
+                xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+            } catch (E) {
+                xmlhttp = false;
+            }
+        }
+        if (!xmlhttp && typeof XMLHttpRequest != 'undefined') {
+            xmlhttp = new XMLHttpRequest();
+        }
+        return xmlhttp;
+    }
+
+    function RemoveData(id_val) {
+        var xmlhttp = getXmlHttp(); // Создаём объект XMLHTTP
+        xmlhttp.open("POST", "~/home/remove/" + id_val, true); // Открываем асинхронное соединение
+        xmlhttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded'); // Отправляем кодировку
+        xmlhttp.send(); // Отправляем POST-запрос
+        xmlhttp.onreadystatechange = function () // Ждём ответа от сервера
+    {
+            if (xmlhttp.readyState == 4) // Ответ пришёл
+            {
+                if (xmlhttp.status == 200) // Сервер вернул код 200 (что хорошо)
+                {
+                    return true; // Выводим ответ сервера
+                }
+            }
+            return false; // Выводим ответ сервера
+        };
+    }
+
+    function RemoveData(elem, id_val)
+    {
+        var xmlhttp = new XMLHttpRequest();
+        var url = "~/ContactData/RemoveLink/" + id_val;
+        xmlhttp.onreadystatechange = function () {
+            if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                deleteField(elem);
+            }
+        }
+        xmlhttp.open("POST", url, true);
+        xmlhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+        xmlhttp.send();
+        return false;
+    }*/
+</script>

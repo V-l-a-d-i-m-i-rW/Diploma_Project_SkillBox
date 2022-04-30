@@ -1,0 +1,10 @@
+﻿@model string
+@{
+    ViewData["Title"] = "Ошибка";
+    if (User.Identity.IsAuthenticated && User.IsInRole("administrator"))
+        Layout = "_Layout_Admin";
+    else
+        Layout = "_Layout_General";
+}
+<h1 align="center"><b>Ошибка получения данных</b></h1>
+<p>@Model</p>

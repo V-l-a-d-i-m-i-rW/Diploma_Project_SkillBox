@@ -1,0 +1,36 @@
+﻿@model IEnumerable<SkillProfi_WebSite.UserAuthorization.User>
+@{
+    ViewData["Title"] = "Список пользователей";
+    Layout = "_Layout_Admin";
+}
+
+<div class="container position-relative">
+    <table class="table table-hover position-center text-center align-middle mb-3 mt-3">
+        <thead>
+            <tr class="align-middle">
+                <th>Логин</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var user in Model)
+            {
+                <tr class="align-middle">
+                    <td>@user.UserName</td>
+                    <td>
+                        <form asp-action="Delete" asp-route-id="@user.Id" method="post" id="deleteform_@user.Id">
+                            <!--button type="submit" class="btn btn-danger btn-sm">Удалить</button-->
+                            <a class="btn btn-danger btn-sm"
+                               href="#" onclick="if (confirm('Вы действительно хотите удалить пользователя @user.UserName?')) {document.getElementById('deleteform_@user.Id').submit() }">
+                                Удалить
+                            </a>
+                        </form>
+                    </td>
+                </tr>
+            }
+            </tbody>
+    </table>
+    <div class="col mb-3 mt-3" align="right" style="right:20%;">
+        <a class="btn btn-primary btn-sm" href="~/Account/Register">Добавить пользователя</a>
+    </div>
+</div>

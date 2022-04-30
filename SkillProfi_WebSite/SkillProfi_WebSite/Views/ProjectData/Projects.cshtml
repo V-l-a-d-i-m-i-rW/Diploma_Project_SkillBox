@@ -1,0 +1,50 @@
+﻿@using SkillProfi_Shared
+@model IEnumerable<Project>
+@{
+    ViewData["Title"] = "Список проектов";
+    if (User.Identity.IsAuthenticated && User.IsInRole("administrator"))
+        Layout = "_Layout_Admin";
+    else
+        Layout = "_Layout_General";
+}
+
+<div class=" container">
+    <div class="row gx-4 gx-lg-5">
+        @foreach (Project project in Model)
+        {
+            <!-- Карточки width="362" height="200"-->
+
+            <div class="col-md-4 mb-5 mt-5">
+                <div class="card h-70" style="border:hidden;">
+                    <div class="card-body" style="padding: 0rem 0rem; border: 1px solid rgba(0, 0, 0, 0.125);" align="center">
+                        <a href="~/ProjectData/GetProject/@project.Id">
+                            <!--"card-img-top"-->
+                            <img class="img-fluid" src="@(project.Image?.Length > 0 ? $"data:image/jpeg;base64,{(Convert.ToBase64String(project.Image))}":"" )"
+                                 alt="@project.Header" />
+                        </a>
+                    </div>
+                    <div class="card-header" style="border: 1px solid rgba(0, 0, 0, 0.125);">
+                        <h5 class=" text-center">@project.Header</h5>
+                    </div>
+                    @if (User.Identity.IsAuthenticated && User.IsInRole("administrator"))
+                    {
+                        <div class="card-body" align="right">
+                            <form asp-action="RemoveProject" asp-controller="ProjectData" asp-route-id="@project.Id" method="post" id="removeform_@project.Id">
+                                <a href="~/ProjectData/EditProject/@project.Id"><img width="30" height="30" src="~/Images/edit.png" alt="Редактировать" /></a>
+                                <a href="#" onclick="if (confirm('Вы действительно хотите удалить проект @project.Header?')) {document.getElementById('removeform_@project.Id').submit() }">
+                                    <img width="30" height="30" src="~/images/delete.png" alt="Удалить" />
+                                </a>
+                            </form>
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+    </div>
+    @if (User.Identity.IsAuthenticated && User.IsInRole("administrator"))
+    {
+        <div class="col mb-3 mt-3" align="right" style="right:20%;">
+            <a class="btn btn-primary btn-sm" href="~/ProjectData/CreateProject">Добавить проект</a>
+        </div>
+    }
+</div>

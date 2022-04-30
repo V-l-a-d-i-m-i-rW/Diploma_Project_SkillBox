@@ -1,0 +1,45 @@
+﻿@using SkillProfi_Shared
+@model Contact
+@{
+    ViewData["Title"] = ViewData["Header"] != null ? ViewData["Header"] : ViewData["ContactPage"];
+    if (User.Identity.IsAuthenticated && User.IsInRole("administrator"))
+        Layout = "_Layout_Admin";
+    else
+        Layout = "_Layout_General";
+}
+<div class="container">
+    <section class="showcase">
+        <div class="row g-0 mt-3">
+            <div class="col-lg-6 order-lg-2 text-white showcase-img"
+                 style="background-image: url('@(Model.Image?.Length > 0 ? $"data:image/jpeg;base64,{(Convert.ToBase64String(Model.Image))}":"" )')"></div>
+            <div class="col-lg-6 order-lg-1 my-auto showcase-text text-center">
+                @Html.Raw(Model.Address)
+            </div>
+        </div>
+        <div class="col-5">
+            <ul class="list-inline mb-3">
+                @if (Model?.Links?.Count() > 0)
+                {
+                    @foreach (ContactLink cur_link in Model.Links)
+                    {
+                        <li class="list-inline-item me-2">
+                            <a href="@cur_link.Description">
+                                <image width="30px" height="30px"
+                                       src="@(cur_link.Image?.Length > 0 ? $"data:image/jpeg;base64,{(Convert.ToBase64String(cur_link.Image))}" : "" )" />
+                            </a>
+                        </li>
+
+                    }
+                }
+            </ul>
+        </div>
+    </section>
+    @if (User.Identity.IsAuthenticated && User.IsInRole("administrator"))
+    { 
+        <div class="col mb-3 mt-3" align="right" style="right:20%;">
+            <a class="btn btn-primary btn-sm" href="~/ContactData/EditContact/@Model.Id">
+                Редактировать
+            </a>
+        </div>
+    }
+</div>

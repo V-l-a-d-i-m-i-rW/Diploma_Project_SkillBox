@@ -1,0 +1,79 @@
+﻿@using SkillProfi_Shared
+@model BidPageData
+@{
+    ViewData["Title"] = "Редактирование формы заяки";
+    if (User.Identity.IsAuthenticated && User.IsInRole("administrator"))
+        Layout = "_Layout_Admin";
+    else
+        Layout = "_Layout_General";
+}
+<form method="post" asp-action="SaveBibPageData" asp-controller="BidData" class="form" enctype="multipart/form-data">
+    <input type="hidden" name="Id" value="@Model.Id" id="hid">
+    <header id="img_header" class="masthead" style="background: url('@(Model.Image?.Length > 0 ? $"data:image/jpeg;base64,{(Convert.ToBase64String(Model.Image))}":"" )') no-repeat center center;">
+        <div class="container position-relative">
+            <div class="row justify-content-center">
+                <div class="col-xl-9">
+                    <div class="col-9 text-left text-white">
+                        <textarea class="form-control form-control-lg" id="HeaderImage" asp-for="HeaderImage" rows="3">@Model.HeaderImage</textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="row justify-content-end mt-3">
+                <div class="col-2">
+                    <input class="form-control" id="HeaderButton" name="HeaderButton" type="text" value="@Model.HeaderButton"/>
+                </div>
+            </div>
+        </div>
+    </header>
+    <div class="container position-relative">
+        <label class="btn btn-primary btn-lm mb-3">
+            <input type="file" name="ImageFormFile" accept=".jpg,.jpeg,.png" onchange="loadFile(event)" style="display: none;" id="input_1">
+            <span>Загрузить рисунок</span>
+        </label>
+
+        <div class="col">
+            <input class="form-control" id="HeaderForm" name="HeaderForm" type="text" placeholder="Заголовок формы"  value="@Model.HeaderForm"/>
+        </div>
+
+
+        <div class="row mb-3 mt-3">
+            <div class="col">
+                <p>Имя</p>
+                <input disabled class="form-control form-control-lg" />
+            </div>
+            <div class="col">
+                <p>email</p>
+                <input disabled class="form-control form-control-lg" />
+            </div>
+        </div>
+
+        <div class="row mb-3 mt-3">
+            <div class="col">
+                <p>Текст обращения</p>
+                <textarea disabled class="form-control form-control-lg" rows="3"></textarea>
+            </div>
+        </div>
+
+        <div class="row mb-3 mt-3">
+            <div class="col" align="right">
+                <button class="btn btn-secondary btn-sm" disabled>
+                    Отправить
+                </button>
+            </div>
+        </div>
+        <div class="col mb-3 mt-3" align="right" style="right:20%;">
+            <button class="btn btn-primary btn-sm" type="submit">
+                Сохранить
+            </button>
+        </div>
+    </div>
+</form>
+
+
+<script>
+    //предпросмотр изображения
+    var loadFile = function (event) {
+        var outputImg = document.getElementById('img_header');
+        outputImg.setAttribute('style', "background: url('" + URL.createObjectURL(event.target.files[0])+"') no-repeat center center;");
+    };
+</script>

@@ -1,0 +1,103 @@
+﻿@model SkillProfi_Shared.Bid
+@{
+    ViewData["Title"] = "Оставить заявку";
+    if (User.Identity.IsAuthenticated && User.IsInRole("administrator"))
+        Layout = "_Layout_Admin";
+    else
+        Layout = "_Layout_General";
+}
+<header class="masthead" style="background: url('@ViewData["Image"]') no-repeat center center;">
+    <div class="container position-relative">
+        <div class="row justify-content-center">
+            <div class="col-xl-9">
+
+                <div class=" col-9 text-left text-white">
+                    <h1 class="mb-5">
+                        @Html.Raw(ViewData["ImageHeader"]!=null ? ViewData["ImageHeader"].ToString():"")
+                    </h1>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col" align="right">
+                    <button class="btn btn-danger btn-lg disabled" type="submit">
+                        @ViewData["ButtonTitle"]
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<h1 class="mb-2 text-left text-black">
+    @ViewData["FormTitle"]
+</h1>
+
+<div class="container position-relative">
+    <form asp-action="SendBid" asp-controller="BidData" asp-antiforgery="true" id="addBidForm">
+
+        <div class="row mb-3 mt-3">
+            <div class="col">
+                <p>Имя</p>
+                <input class="form-control form-control-lg" asp-for="Name" id="firstName" type="text" />
+            </div>
+            <div class="col">
+                <p>email</p>
+                <input class="form-control form-control-lg" id="emailAddress" asp-for="UserEmail" type="email" />
+                <div style="color:red;" id="emailAddressError"></div>
+            </div>
+        </div>
+
+        <div class="row mb-3 mt-3">
+            <div class="col">
+                <p>Текст обращения</p>
+                <textarea class="form-control form-control-lg" id="sendText" asp-for="Text" rows="3"></textarea>
+            </div>
+        </div>
+
+        <div class="row mb-3 mt-3">
+            <div class="col" align="right">
+                <button class="btn btn-primary btn-sm" id="sendButton" type="submit">
+                    Отправить
+                </button>
+            </div>
+        </div>
+    </form>
+    @if (User.Identity.IsAuthenticated && User.IsInRole("administrator"))
+    {
+        <div class="col mb-3 mt-3" align="right" style="right:20%;">
+            <a class="btn btn-primary btn-sm" href="~/BidData/EditBidPageData">
+                Редактировать
+            </a>
+        </div>
+    }
+</div>
+
+
+<script>
+    var btn = document.getElementById("sendButton");
+    var firstNameElement = document.getElementById("firstName");
+    var emailAddressElement = document.getElementById("emailAddress");
+    var sendTextElement = document.getElementById("sendText");
+    var emailAddressErrorElement = document.getElementById("emailAddressError");
+    btn.disabled = true;
+    //подписываемся на событие изменения значения текста
+    firstNameElement.addEventListener("keyup", ActivateBtn, false);
+    emailAddressElement.addEventListener("keyup", ActivateBtn, false);
+    sendTextElement.addEventListener("keyup", ActivateBtn, false);
+
+    function ActivateBtn() {
+        activateButton([firstNameElement.value, sendTextElement.value, emailAddressElement.value], btn);
+        var isValid = IsValidMail();
+        if (!btn.disabled)
+            btn.disabled = !isValid;
+    }
+
+    function IsValidMail() {
+        if (!isEmpty(emailAddressElement.value) && !ValidMail(emailAddressElement.value)) {
+            emailAddressErrorElement.innerHTML = '<b>Некорректный email!</b>';
+            return false;
+        }
+        emailAddressErrorElement.innerHTML = '';
+        return true;
+    }
+</script>

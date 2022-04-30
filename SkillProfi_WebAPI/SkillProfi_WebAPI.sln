@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.32407.337
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SkillProfi_WebAPI", "SkillProfi_WebAPI\SkillProfi_WebAPI.csproj", "{898A78C4-049C-4692-9222-BA5DCCBC570F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{898A78C4-049C-4692-9222-BA5DCCBC570F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{898A78C4-049C-4692-9222-BA5DCCBC570F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{898A78C4-049C-4692-9222-BA5DCCBC570F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{898A78C4-049C-4692-9222-BA5DCCBC570F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {930C0C9F-7C4D-46B2-AF48-98DF02B9BA81}
+	EndGlobalSection
+EndGlobal

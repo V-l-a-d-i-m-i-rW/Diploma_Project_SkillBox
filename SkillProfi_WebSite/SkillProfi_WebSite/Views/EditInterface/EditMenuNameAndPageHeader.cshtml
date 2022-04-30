@@ -1,0 +1,102 @@
+﻿@using SkillProfi_Shared
+@model MenuNameAndPageHeader
+@{
+    ViewData["Title"] = "Изменение названий ссылок главного меню и заголовков страниц";
+    if (User.Identity.IsAuthenticated && User.IsInRole("administrator"))
+        Layout = "_Layout_Admin";
+    else
+        Layout = "_Layout_General";
+}
+<div class="container px-4 px-lg-5 mb-3">
+    <form id="editMenuNameform" method="post" asp-action="SaveMenuNameAndPageHeader" asp-controller="EditInterface" class="form">
+        <h3 class="text-center mt-3">Добавить/редактировать</h3>
+        <input type="hidden" name="Id" value="@Model.Id">
+        <div class="row">
+            <div class="col text-center">
+                <h5>Название меню</h5>
+            </div>
+            <div class="col text-center">
+                <h5>Заголовок страницы</h5>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col mb-3 mt-3">
+                <input name="MainPage" id="PageMain" class="form-control" placeholder='Название меню "Главная страница"' type="text" value="@Model.MainPage" />
+            </div>
+            <div class="col mb-3 mt-3">
+                <input name="MainPageHeader" id="PageMainHeader" class="form-control" placeholder='Заголовок страницы "Главная страница"' type="text" value="@Model.MainPageHeader" />
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col mb-3 mt-3">
+                <input name="ProjectPage" id="PageProject" class="form-control" placeholder='Название меню "Проекты"' type="text" value="@Model.ProjectPage" />
+            </div>
+            <div class="col mb-3 mt-3">
+                <input name="ProjectPageHeader" id="PageProjectHeader" class="form-control" placeholder='Заголовок страницы "Проекты"' type="text" value="@Model.ProjectPageHeader" />
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col mb-3 mt-3">
+                <input name="ServicePage" id="PageService" class="form-control" placeholder='Название меню "Услуги"' type="text" value="@Model.ServicePage" />
+            </div>
+            <div class="col mb-3 mt-3">
+                <input name="ServicePageHeader" id="PageServiceHeader" class="form-control" placeholder='Заголовок страницы "Услуги"' type="text" value="@Model.ServicePageHeader" />
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col mb-3 mt-3">
+                <input name="BlogPage" id="PageBlog" class="form-control" placeholder='Название меню "Блог"' type="text" value="@Model.BlogPage" />
+            </div>
+            <div class="col mb-3 mt-3">
+                <input name="BlogPageHeader" id="PageBlogHeader" class="form-control" placeholder='Заголовок страницы "Блог"' type="text" value="@Model.BlogPageHeader" />
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col mb-3 mt-3">
+                <input name="ContactPage" id="PageContact" class="form-control" placeholder='Название меню "Контакты"' type="text" value="@Model.ContactPage" />
+            </div>
+            <div class="col mb-3 mt-3">
+                <input name="ContactPageHeader" id="PageContactHeader" class="form-control" placeholder='Заголовок страницы "Контакты"' type="text" value="@Model.ContactPageHeader" />
+            </div>
+        </div>
+        <div class="form-group mb-3 mt-3" align="right">
+            <input id="btnSave" type="submit" class="btn btn-primary" value="Сохранить" />
+        </div>
+</form>
+</div>
+<script>
+    var btn = document.getElementById("btnSave"); 
+    var el1 = document.getElementById("PageMain");
+    var el2 = document.getElementById("PageProject");
+    var el3 = document.getElementById("PageService");
+    var el4 = document.getElementById("PageBlog");
+    var el5 = document.getElementById("PageContact");
+    var elh1 = document.getElementById("PageMainHeader");
+    var elh2 = document.getElementById("PageProjectHeader");
+    var elh3 = document.getElementById("PageServiceHeader");
+    var elh4 = document.getElementById("PageBlogHeader");
+    var elh5 = document.getElementById("PageContactHeader");
+
+    btn.disabled = true;
+    //подписываемся на событие изменения значения текста
+    el1.addEventListener("keyup", ActivateBtn, false);
+    el2.addEventListener("keyup", ActivateBtn, false);
+    el3.addEventListener("keyup", ActivateBtn, false);
+    el4.addEventListener("keyup", ActivateBtn, false);
+    el5.addEventListener("keyup", ActivateBtn, false);
+
+    elh1.addEventListener("keyup", ActivateBtn, false);
+    elh2.addEventListener("keyup", ActivateBtn, false);
+    elh3.addEventListener("keyup", ActivateBtn, false);
+    elh4.addEventListener("keyup", ActivateBtn, false);
+    elh5.addEventListener("keyup", ActivateBtn, false);
+
+    function ActivateBtn() {
+        activateButton([el1.value, el2.value, el3.value, el4.value, el5.value], btn);
+    }
+
+</script>
