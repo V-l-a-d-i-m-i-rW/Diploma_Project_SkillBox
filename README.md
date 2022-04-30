@@ -104,3 +104,6 @@
 
 1. Для сборки библиотеки требуется подключить NuGet пакеты:
 	- Microsoft.AspNetCore.Http.Features версии 5.0.16;
+
+
+>*В папке DB_example содержится тестовая БД для проекта SkillProfi_WebAPI*
