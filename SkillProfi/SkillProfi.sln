@@ -1,0 +1,49 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.32407.337
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SkillProfi_Shared", "SkillProfi_Shared\SkillProfi_Shared.csproj", "{0CC6C1AD-C5CC-48E2-9B3F-E4D053B34110}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SkillProfi_TelegramBot", "SkillProfi_TelegramBot\SkillProfi_TelegramBot.csproj", "{10F310A9-9D2C-4127-8084-86B45482BFB0}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SkillProfi_WebAPI", "SkillProfi_WebAPI\SkillProfi_WebAPI.csproj", "{4BE4E32A-82AB-475A-BA1D-8607347A7BDE}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SkillProfi_WebSite", "SkillProfi_WebSite\SkillProfi_WebSite.csproj", "{08585C6D-97BA-40F3-B253-4476A86986A9}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SkillProfi_WPFClient", "SkillProfi_WPFClient\SkillProfi_WPFClient.csproj", "{2B2E4CD7-61D4-4E7B-9FF1-C453215230E8}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0CC6C1AD-C5CC-48E2-9B3F-E4D053B34110}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0CC6C1AD-C5CC-48E2-9B3F-E4D053B34110}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0CC6C1AD-C5CC-48E2-9B3F-E4D053B34110}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0CC6C1AD-C5CC-48E2-9B3F-E4D053B34110}.Release|Any CPU.Build.0 = Release|Any CPU
+		{10F310A9-9D2C-4127-8084-86B45482BFB0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{10F310A9-9D2C-4127-8084-86B45482BFB0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{10F310A9-9D2C-4127-8084-86B45482BFB0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{10F310A9-9D2C-4127-8084-86B45482BFB0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4BE4E32A-82AB-475A-BA1D-8607347A7BDE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4BE4E32A-82AB-475A-BA1D-8607347A7BDE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4BE4E32A-82AB-475A-BA1D-8607347A7BDE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4BE4E32A-82AB-475A-BA1D-8607347A7BDE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{08585C6D-97BA-40F3-B253-4476A86986A9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{08585C6D-97BA-40F3-B253-4476A86986A9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{08585C6D-97BA-40F3-B253-4476A86986A9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{08585C6D-97BA-40F3-B253-4476A86986A9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2B2E4CD7-61D4-4E7B-9FF1-C453215230E8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2B2E4CD7-61D4-4E7B-9FF1-C453215230E8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2B2E4CD7-61D4-4E7B-9FF1-C453215230E8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2B2E4CD7-61D4-4E7B-9FF1-C453215230E8}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {930C0C9F-7C4D-46B2-AF48-98DF02B9BA81}
+	EndGlobalSection
+EndGlobal
