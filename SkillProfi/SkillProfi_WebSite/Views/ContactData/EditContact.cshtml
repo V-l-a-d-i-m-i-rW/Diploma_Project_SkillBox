@@ -73,21 +73,20 @@
     </form>
 
     <div class="form-group mb-3 mt-3" align="right">
-        <a class="btn btn-primary" href="#" onclick="document.getElementById('editcontactform').submit()">Сохранить</a>
+        <a class="btn btn-primary" href="#" onclick="ReplaseIdElements(); document.getElementById('editcontactform').submit();">Сохранить</a>
     </div>
 </div>
 
 <script>
     //отображение миниатюры загруженного файла
-    var loadFile = function (event, q) {
+    var loadFile = function (event, isFixedWidth) {
         //определение id элемента вызвавшего событие
         event.preventDefault();
         var idFlight = event.target.id;
-        //console.log(idFlight);
         var outputImg = document.getElementById('outputImage_' + idFlight);
         outputImg.src = URL.createObjectURL(event.target.files[0]);
         outputImg.onload = function () {
-            if (!q) {
+            if (!isFixedWidth) {
                 outputImg.style.width = '35px';
                 outputImg.style.height = 'auto';
             }
@@ -95,9 +94,8 @@
         }
     };
 
-    
-    //замена имен елементов
-    function ReplaseElemantName(elem, num)
+    //изменение имен элементов формы
+    function ReplaseElementName(elem, num)
     {
         if (elem)
         {
@@ -105,20 +103,16 @@
             if (elemName)
             {
                 var setElemName = "";
-                if (elemName.endsWith(".Id"))
-                {
+                if (elemName.endsWith(".Id")){
                     setElemName = "contact.Links[" + num + "].Id";
                 }
-                else if (elemName.endsWith(".ImageFormFile"))
-                {
+                else if (elemName.endsWith(".ImageFormFile")){
                     setElemName = "contact.Links[" + num + "].ImageFormFile";
                 }
-                else if (elemName.endsWith(".Description"))
-                {
+                else if (elemName.endsWith(".Description")){
                     setElemName = "contact.Links[" + num + "].Description";
                 }
-                if (setElemName)
-                {
+                if (setElemName){
                     //console.log("Было_" + elem.name);
                     elem.setAttribute("name", setElemName);
                     //console.log("Стало_" + elem.name);
@@ -126,32 +120,36 @@
             }
             if (elem.children)
             {
-                for (var j = 0; j < elem.children.length; j++)
-                {
-                    ReplaseElemantName(elem.children[j], num);
+                for (var j = 0; j < elem.children.length; j++){
+                    ReplaseElementName(elem.children[j], num);
                 }
             }
         }
     }
+    //переиндексация элементов формы
+    function ReplaseIdElements() {
+        var divs = document.getElementsByClassName("input-group mt-3");
+        if (divs) {
+            for (var i = 0; i < divs.length; i++) {
+                ReplaseElementName(divs[i], i);
+            }
+        }
+    }
+    //
 
-    //Добавление и удаление полей
     var curFieldNameId = @linkCount; // Уникальное значение для атрибута name
 
+    //удаление поля ссылки
     function deleteField(ele) {
         // Получаем доступ к ДИВу, содержащему поле
         var contDiv = ele.parentNode;
         // Удаляем этот ДИВ из DOM-дерева
         contDiv.parentNode.removeChild(contDiv);
-        var divs = document.getElementsByClassName("input-group mt-3");
-        if (divs) {
-            for (var i = 0; i < divs.length; i++) {
-                ReplaseElemantName(divs[i], i);
-            }
-        }
+        //ReplaseIdElements();
         // Возвращаем false, чтобы не было перехода по сслыке
         return false;
     }
-
+    //добавление поля ссылки
     function addField() {
 
         // Создаем элемент ДИВ
@@ -168,14 +166,14 @@
             "<input class=\"form-control ms-2 me-2\" name=\"contact.Links[" + curFieldNameId+"].Description\" type=\"text\" placeholder=\"Ссылка\"/>" +
             "<a onclick=\"return deleteField(this)\" href=\"#\" id=\"button_" + curFieldNameId + "\"class=\"btn btn-danger\">X" +
             //"<img width=\"35px\" height=\"35px\" src=\"Images/delete.png\" alt=\"Удалить\" />" +
-            "</a>";
-        //data:image/jpeg;base64,0x89504E470D0A1A0A0000000D4948445200000200000002000806000000F478D4FA0000000473424954080808087C086488000000097048597300000EC400000EC401952B0E1B0000001974455874536F667477617265007777772E696E6B73636170652E6F72679BEE3C1A0000200049444154789CECBD79BC2545793EFE549F
+            "</a>";        
         //console.log(inner);
         div.innerHTML = inner;
         // Добавляем новый узел в конец списка полей
         document.getElementById("form_parent").appendChild(div);
         // Увеличиваем ID
         curFieldNameId++;
+        //ReplaseIdElements();
         // Возвращаем false, чтобы не было перехода по сслыке
         return false;
     }
