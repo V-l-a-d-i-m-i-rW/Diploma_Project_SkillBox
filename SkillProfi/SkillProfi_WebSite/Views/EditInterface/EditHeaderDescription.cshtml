@@ -43,14 +43,14 @@
 
     </form>
     <div class="form-group mb-3 mt-3" align="right">
-        <a class="btn btn-primary" onclick="document.getElementById('editHeaderform').submit()" href="#">Сохранить</a>
+        <a class="btn btn-primary" onclick="ReplaseIdElements(); document.getElementById('editHeaderform').submit();" href="#">Сохранить</a>
     </div>
 </div>
 <script>
     //Добавление и удаление полей
     var curFieldNameId = @headerDescriptionCount; // Уникальное значение для атрибута name
-
-    function ReplaseElemantName(elem, num) {
+    //изменение имен элементов формы
+    function ReplaseElementName(elem, num) {
         if (elem) {
             var elemName = elem.name;
             if (elemName) {
@@ -69,32 +69,37 @@
             }
             if (elem.children) {
                 for (var j = 0; j < elem.children.length; j++) {
-                    ReplaseElemantName(elem.children[j], num);
+                    ReplaseElementName(elem.children[j], num);
                 }
             }
         }
     }
+    //переиндексация элементов формы
+    function ReplaseIdElements() {
+        var divs = document.getElementsByClassName("input-group mt-3");
+        if (divs) {
+            for (var i = 0; i < divs.length; i++) {
+                ReplaseElementName(divs[i], i);
+            }
+        }
+    }
+
+    //удаление поля фразы блока заголовка меню
     function deleteField(ele) {
         // Получаем доступ к ДИВу, содержащему поле
         var contDiv = ele.parentNode;
         contDiv.parentNode.removeChild(contDiv);
-        var divs = document.getElementsByClassName("input-group mt-3");
-        if (divs) {
-            for (var i = 0; i < divs.length; i++) {
-                ReplaseElemantName(divs[i], i);
-            }
-        }
+        //перенумерация элементов
+        //ReplaseIdElements();
         // Возвращаем false, чтобы не было перехода по сслыке
         return false;
     }
-
+    //добавление поля фразы блока заголовка меню
     function addField() {
         // Создаем элемент ДИВ
         var div = document.createElement("div");
         //задаем класс элемента DIV
         div.className = "input-group mt-3";
-        div.ID
-
         // Добавляем HTML-контент с пом. свойства innerHTML
         var inner = "<input type=\"hidden\" name=\"headers[" + curFieldNameId + "].Id\" value=\"0\" id=\"hid__" + curFieldNameId + "\">" +
             "<input class=\"form-control ms-2 me-2\" name=\"headers[" + curFieldNameId + "].Description\" type=\"text\" placeholder=\"Фраза блока заголовка меню\"/>" +
@@ -105,6 +110,8 @@
         document.getElementById("form_parent").appendChild(div);
         // Увеличиваем ID
         curFieldNameId++;
+        //перенумерация элементов
+        //ReplaseIdElements();
         // Возвращаем false, чтобы не было перехода по сслыке
         return false;
     }
