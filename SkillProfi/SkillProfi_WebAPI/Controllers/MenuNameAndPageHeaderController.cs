@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SkillProfi_Shared;
-using SkillProfi_WebAPI.Models.DBData;
+using SkillProfi_WebAPI.Classes;
 using System;
 using System.Linq;
 using System.Reflection;

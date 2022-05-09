@@ -13,9 +13,9 @@ namespace SkillProfi_WebSite.Controllers
     {
         //private readonly RoleManager<IdentityRole> _roleManager;
         private readonly UserManager<User> _userManager;
-        private readonly ISkillProfiData data;
+        private readonly ISkillProfi data;
 
-        public UsersController( UserManager<User> userManager, ISkillProfiData data)//RoleManager<IdentityRole> roleManager,
+        public UsersController( UserManager<User> userManager, ISkillProfi data)//RoleManager<IdentityRole> roleManager,
         {
             //_roleManager = roleManager;
             _userManager = userManager;

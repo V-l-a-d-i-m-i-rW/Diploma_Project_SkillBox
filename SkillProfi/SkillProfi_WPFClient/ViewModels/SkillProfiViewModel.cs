@@ -40,7 +40,7 @@ namespace SkillProfi_WPFClient.ViewModels
     {
         #region поля
         private string header;
-        private readonly DataView<Bid> bidData;
+        private readonly SkillProfiWebAPI<Bid> bidData;
         private readonly string url;
         private readonly HttpClient http_client;
         private string editOrCreateTextButton, editOrCreateTextHeader;
@@ -55,35 +55,35 @@ namespace SkillProfi_WPFClient.ViewModels
         /// <summary>
         /// Объект услуги
         /// </summary>
-        private readonly DataView<Service> serviceData;
+        private readonly SkillProfiWebAPI<Service> serviceData;
         /// <summary>
         /// Объект проекты
         /// </summary>
-        private readonly DataView<Project> projectData;
+        private readonly SkillProfiWebAPI<Project> projectData;
         /// <summary>
         /// Объект блог
         /// </summary>
-        private readonly DataView<Blog> blogData;
+        private readonly SkillProfiWebAPI<Blog> blogData;
 
         /// <summary>
         /// Объект заголовки меню и страниц
         /// </summary>
-        private readonly DataView<MenuNameAndPageHeader> menuNameAndPageHeaderData;
+        private readonly SkillProfiWebAPI<MenuNameAndPageHeader> menuNameAndPageHeaderData;
 
         /// <summary>
         /// Объект заголовки
         /// </summary>
-        private readonly DataView<HeaderDescription> headerDescriptionData;
+        private readonly SkillProfiWebAPI<HeaderDescription> headerDescriptionData;
 
         /// <summary>
         /// Объект контакты
         /// </summary>
-        private readonly DataView<Contact> contactData;
+        private readonly SkillProfiWebAPI<Contact> contactData;
 
         /// <summary>
         /// данные для отображения формы заявки
         /// </summary>
-        private readonly DataView<BidPageData> bidPageData;
+        private readonly SkillProfiWebAPI<BidPageData> bidPageData;
 
         /// <summary>
         /// сервис вывода сообщений
@@ -223,7 +223,7 @@ namespace SkillProfi_WPFClient.ViewModels
         /// <summary>
         /// заявка на отправку
         /// </summary>
-        public DataView<Bid> BidData{ get => bidData;}
+        public SkillProfiWebAPI<Bid> BidData{ get => bidData;}
 
         /// <summary>
         /// отсортированные заявки с общим количеством заявок в БД
@@ -245,37 +245,37 @@ namespace SkillProfi_WPFClient.ViewModels
         /// <summary>
         /// Услуги
         /// </summary>
-        public DataView<Service> ServiceData { get => serviceData; }
+        public SkillProfiWebAPI<Service> ServiceData { get => serviceData; }
 
         /// <summary>
         /// Проекты
         /// </summary>
-        public DataView<Project> ProjectData { get => projectData; }
+        public SkillProfiWebAPI<Project> ProjectData { get => projectData; }
 
         /// <summary>
         /// Блог
         /// </summary>
-        public DataView<Blog> BlogData { get => blogData; }
+        public SkillProfiWebAPI<Blog> BlogData { get => blogData; }
 
         /// <summary>
         /// Объект заголовки меню и страниц
         /// </summary>
-        public DataView<MenuNameAndPageHeader> MenuNameAndPageHeaderData { get => menuNameAndPageHeaderData; }
+        public SkillProfiWebAPI<MenuNameAndPageHeader> MenuNameAndPageHeaderData { get => menuNameAndPageHeaderData; }
 
         /// <summary>
         /// Объект заголовки "Крылатые фразы"
         /// </summary>
-        public DataView<HeaderDescription> HeaderDescriptionData { get => headerDescriptionData; }
+        public SkillProfiWebAPI<HeaderDescription> HeaderDescriptionData { get => headerDescriptionData; }
 
         /// <summary>
         /// Объект контакты
         /// </summary>
-        public DataView<Contact> ContactData { get => contactData; }
+        public SkillProfiWebAPI<Contact> ContactData { get => contactData; }
 
         /// <summary>
         /// данные для отображения формы заявки
         /// </summary>
-        public DataView<BidPageData> BidPageData { get => bidPageData; }
+        public SkillProfiWebAPI<BidPageData> BidPageData { get => bidPageData; }
 
         /// <summary>
         /// индекс выбранной вкладки
@@ -759,7 +759,7 @@ namespace SkillProfi_WPFClient.ViewModels
                         AddUserConfirmPassword = string.Empty;
                         SelectedTabItem = 14;
                     }
-                    catch (Exception ex)
+                    catch (ArgumentException ex)
                     {
                         ShowErrorMessage(ex.Message);
                     }
@@ -1617,35 +1617,35 @@ namespace SkillProfi_WPFClient.ViewModels
             }
             dialogService = service;
 
-            serviceData = new DataView<Service>(url.TrimEnd('/') + "/api/ServiceData", http_client);
+            serviceData = new SkillProfiWebAPI<Service>(url.TrimEnd('/') + "/api/ServiceData", http_client);
             serviceData.ErrorMessage += ShowErrorMessage;
             serviceData.LoadData += OnLoadData;
 
-            projectData = new DataView<Project>(url.TrimEnd('/') + "/api/ProjectData", http_client);
+            projectData = new SkillProfiWebAPI<Project>(url.TrimEnd('/') + "/api/ProjectData", http_client);
             projectData.ErrorMessage += ShowErrorMessage;
             projectData.LoadData += OnLoadData;
 
-            blogData = new DataView<Blog>(url.TrimEnd('/') + "/api/BlogData", http_client);
+            blogData = new SkillProfiWebAPI<Blog>(url.TrimEnd('/') + "/api/BlogData", http_client);
             blogData.ErrorMessage += ShowErrorMessage;
             blogData.LoadData += OnLoadData;
 
-            menuNameAndPageHeaderData = new DataView<MenuNameAndPageHeader>(url.TrimEnd('/') + "/api/MenuNameAndPageHeader", http_client);
+            menuNameAndPageHeaderData = new SkillProfiWebAPI<MenuNameAndPageHeader>(url.TrimEnd('/') + "/api/MenuNameAndPageHeader", http_client);
             menuNameAndPageHeaderData.ErrorMessage += ShowErrorMessage;
             menuNameAndPageHeaderData.LoadData += OnLoadData;
 
-            headerDescriptionData = new DataView<HeaderDescription>(url.TrimEnd('/') + "/api/HeaderQuote", http_client);
+            headerDescriptionData = new SkillProfiWebAPI<HeaderDescription>(url.TrimEnd('/') + "/api/HeaderQuote", http_client);
             headerDescriptionData.ErrorMessage += ShowErrorMessage;
             headerDescriptionData.LoadData += OnLoadData;
 
-            contactData = new DataView<Contact>(url.TrimEnd('/') + "/api/ContactData", http_client);
+            contactData = new SkillProfiWebAPI<Contact>(url.TrimEnd('/') + "/api/ContactData", http_client);
             contactData.ErrorMessage += ShowErrorMessage;
             contactData.LoadData += OnLoadData;
 
-            bidPageData = new DataView<BidPageData>(url.TrimEnd('/') + "/api/BidPage", http_client);
+            bidPageData = new SkillProfiWebAPI<BidPageData>(url.TrimEnd('/') + "/api/BidPage", http_client);
             bidPageData.ErrorMessage += ShowErrorMessage;
             bidPageData.LoadData += OnLoadData;
 
-            bidData = new DataView<Bid>(url.TrimEnd('/') + "/api/BidData", http_client);
+            bidData = new SkillProfiWebAPI<Bid>(url.TrimEnd('/') + "/api/BidData", http_client);
             bidData.ErrorMessage += ShowErrorMessage;
             bidData.LoadData += OnLoadData;
 

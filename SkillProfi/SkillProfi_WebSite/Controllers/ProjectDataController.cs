@@ -4,15 +4,16 @@ using SkillProfi_Shared;
 using SkillProfi_WebSite.Interfaces;
 using System;
 using System.Threading.Tasks;
+using SkillProfi_WebSite.Classes;
 
 namespace SkillProfi_WebSite.Controllers
 {
     [Authorize(Roles = "administrator")]
     public class ProjectDataController : Controller
     {
-        private readonly ISkillProfiData data;
+        private readonly ISkillProfi data;
 
-        public ProjectDataController(ISkillProfiData data)//(,ILogger<HomeController> logger,
+        public ProjectDataController(ISkillProfi data)//(,ILogger<HomeController> logger,
         {
             //_logger = logger;
             this.data = data;
@@ -41,7 +42,7 @@ namespace SkillProfi_WebSite.Controllers
             }
             catch (Exception ex)
             {
-                return View("Error", ex.InnerException?.Message ?? ex.Message);
+                return ExceptionView.View(ex, this);
             }
         }
         /// <summary>
@@ -60,7 +61,7 @@ namespace SkillProfi_WebSite.Controllers
             }
             catch (Exception ex)
             {
-                return View("Error", ex.InnerException?.Message ?? ex.Message);
+                return ExceptionView.View(ex, this);
             }
         }
 
@@ -82,7 +83,7 @@ namespace SkillProfi_WebSite.Controllers
             }
             catch (Exception ex)
             {
-                return View("Error", ex.InnerException?.Message ?? ex.Message);
+                return ExceptionView.View(ex, this);
             }
         }
 
@@ -104,7 +105,7 @@ namespace SkillProfi_WebSite.Controllers
             }
             catch (Exception ex)
             {
-                return View("Error", ex.InnerException?.Message ?? ex.Message);
+                return ExceptionView.View(ex, this);
             }
         }
 
@@ -125,7 +126,7 @@ namespace SkillProfi_WebSite.Controllers
             }
             catch (Exception ex)
             {
-                return View("Error", ex.InnerException?.Message ?? ex.Message);
+                return ExceptionView.View(ex, this);
             }
         }
 
@@ -152,7 +153,7 @@ namespace SkillProfi_WebSite.Controllers
             }
             catch (Exception ex)
             {
-                return View("Error", ex.InnerException?.Message ?? ex.Message);
+                return ExceptionView.View(ex, this);
             }
         }
         #endregion

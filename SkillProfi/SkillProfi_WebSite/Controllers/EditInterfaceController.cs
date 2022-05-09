@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SkillProfi_Shared;
+using SkillProfi_WebSite.Classes;
 using SkillProfi_WebSite.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -11,8 +12,8 @@ namespace SkillProfi_WebSite.Controllers
     [Authorize(Roles = "administrator")]
     public class EditInterfaceController : Controller
     {
-        private readonly ISkillProfiData data;
-        public EditInterfaceController(ISkillProfiData data)//(,ILogger<HomeController> logger,
+        private readonly ISkillProfi data;
+        public EditInterfaceController(ISkillProfi data)//(,ILogger<HomeController> logger,
         {
             //_logger = logger;
             this.data = data;
@@ -32,7 +33,7 @@ namespace SkillProfi_WebSite.Controllers
             }
             catch (Exception ex)
             {
-                return View("Error", ex.InnerException?.Message ?? ex.Message);
+                return ExceptionView.View(ex, this);
             }
         }
         /// <summary>
@@ -53,7 +54,7 @@ namespace SkillProfi_WebSite.Controllers
             }
             catch (Exception ex)
             {
-                return View("Error", ex.InnerException?.Message ?? ex.Message);
+                return ExceptionView.View(ex, this);
             }
         }
         /// <summary>
@@ -70,7 +71,7 @@ namespace SkillProfi_WebSite.Controllers
             }
             catch (Exception ex)
             {
-                return View("Error", ex.InnerException?.Message ?? ex.Message);
+                return ExceptionView.View(ex, this);
             }
         }
 
@@ -91,7 +92,7 @@ namespace SkillProfi_WebSite.Controllers
             }
             catch (Exception ex)
             {
-                return View("Error", ex.InnerException?.Message ?? ex.Message);
+                return ExceptionView.View(ex, this);
             }
         }
     }

@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using SkillProfi_WebAPI.Models.DBData;
+using SkillProfi_WebAPI.Classes;
 
 namespace SkillProfi_WebAPI.Migrations
 {

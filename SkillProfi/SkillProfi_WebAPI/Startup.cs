@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using SkillProfi_WebAPI.Models.DBData;
+using SkillProfi_WebAPI.Classes;
 
 namespace SkillProfi_WebAPI
 {

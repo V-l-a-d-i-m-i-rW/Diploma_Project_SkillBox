@@ -41,12 +41,12 @@ namespace SkillProfi_TelegramBot.Classes
         private readonly CancellationTokenSource cancellationToken;
         private readonly HttpClient http_client;
         private readonly string url;
-        private readonly SkiillProfiData<MenuNameAndPageHeader> menuHeaderData;
-        private readonly SkiillProfiData<Project> projectData;
-        private readonly SkiillProfiData<Service> serviceData;
-        private readonly SkiillProfiData<Blog> blogData;
-        private readonly SkiillProfiData<Contact> contactData;
-        private readonly SkiillProfiData<Bid> bidData;
+        private readonly SkiillProfiWebAPI<MenuNameAndPageHeader> menuHeaderData;
+        private readonly SkiillProfiWebAPI<Project> projectData;
+        private readonly SkiillProfiWebAPI<Service> serviceData;
+        private readonly SkiillProfiWebAPI<Blog> blogData;
+        private readonly SkiillProfiWebAPI<Contact> contactData;
+        private readonly SkiillProfiWebAPI<Bid> bidData;
         private readonly Dictionary<long, Bid> bid_dictonary;
 
         #endregion
@@ -889,22 +889,22 @@ namespace SkillProfi_TelegramBot.Classes
             cancellationToken = new();
             http_client = new();
 
-            serviceData = new SkiillProfiData<Service>(url.TrimEnd('/') + "/api/ServiceData", http_client);
+            serviceData = new SkiillProfiWebAPI<Service>(url.TrimEnd('/') + "/api/ServiceData", http_client);
             serviceData.ErrorMessage += AddError;
 
-            projectData = new SkiillProfiData<Project>(url.TrimEnd('/') + "/api/ProjectData", http_client);
+            projectData = new SkiillProfiWebAPI<Project>(url.TrimEnd('/') + "/api/ProjectData", http_client);
             projectData.ErrorMessage += AddError;
 
-            blogData = new SkiillProfiData<Blog>(url.TrimEnd('/') + "/api/BlogData", http_client);
+            blogData = new SkiillProfiWebAPI<Blog>(url.TrimEnd('/') + "/api/BlogData", http_client);
             blogData.ErrorMessage += AddError;
 
-            menuHeaderData = new SkiillProfiData<MenuNameAndPageHeader>(url.TrimEnd('/') + "/api/MenuNameAndPageHeader", http_client);
+            menuHeaderData = new SkiillProfiWebAPI<MenuNameAndPageHeader>(url.TrimEnd('/') + "/api/MenuNameAndPageHeader", http_client);
             menuHeaderData.ErrorMessage += AddError;
 
-            contactData = new SkiillProfiData<Contact>(url.TrimEnd('/') + "/api/ContactData", http_client);
+            contactData = new SkiillProfiWebAPI<Contact>(url.TrimEnd('/') + "/api/ContactData", http_client);
             contactData.ErrorMessage += AddError;
 
-            bidData = new SkiillProfiData<Bid>(url.TrimEnd('/') + "/api/BidData", http_client);
+            bidData = new SkiillProfiWebAPI<Bid>(url.TrimEnd('/') + "/api/BidData", http_client);
             bidData.ErrorMessage += AddError;
 
             bid_dictonary = new();

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SkillProfi_Shared;
+using SkillProfi_WebSite.Classes;
 using SkillProfi_WebSite.Interfaces;
 using System;
 using System.Threading.Tasks;
@@ -10,8 +11,8 @@ namespace SkillProfi_WebSite.Controllers
     [Authorize(Roles = "administrator")]
     public class ContactDataController : Controller
     {
-        private readonly ISkillProfiData data;
-        public ContactDataController(ISkillProfiData data)//(,ILogger<HomeController> logger,
+        private readonly ISkillProfi data;
+        public ContactDataController(ISkillProfi data)//(,ILogger<HomeController> logger,
         {
             //_logger = logger;
             this.data = data;
@@ -36,7 +37,7 @@ namespace SkillProfi_WebSite.Controllers
             }
             catch (Exception ex)
             {
-                return View("Error", ex.InnerException?.Message ?? ex.Message);
+                return ExceptionView.View(ex, this);
             }
         }
 
@@ -55,7 +56,7 @@ namespace SkillProfi_WebSite.Controllers
             }
             catch (Exception ex)
             {
-                return View("Error", ex.InnerException?.Message ?? ex.Message);
+                return ExceptionView.View(ex, this);
             }
         }
 
@@ -77,7 +78,7 @@ namespace SkillProfi_WebSite.Controllers
             }
             catch (Exception ex)
             {
-                return View("Error", ex.InnerException?.Message ?? ex.Message);
+                return ExceptionView.View(ex, this);
             }
         }
         #endregion

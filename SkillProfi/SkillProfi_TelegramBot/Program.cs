@@ -13,7 +13,7 @@ namespace SkillProfi_TelegramBot
                 tb.Start();
                 Console.ReadKey();
             }
-            catch (Exception ex)
+            catch (ArgumentNullException ex)
             {
                 TelegramBot.AddError(ex.InnerException?.Message ?? ex.Message);
                 Console.ReadLine();

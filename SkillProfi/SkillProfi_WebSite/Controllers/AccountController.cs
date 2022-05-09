@@ -12,10 +12,10 @@ namespace SkillProfi_WebSite.Controllers
         //private readonly ILogger log;
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
-        private readonly ISkillProfiData data;
+        private readonly ISkillProfi data;
 
         public AccountController(UserManager<User> userManager, 
-                                SignInManager<User> signInManager, ISkillProfiData data)
+                                SignInManager<User> signInManager, ISkillProfi data)
                                // ,ILoggerFactory Log)
         {
             //this.log = Log.CreateLogger(">>> Мой Logger ");

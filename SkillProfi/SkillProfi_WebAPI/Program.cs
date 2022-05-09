@@ -1,9 +1,8 @@
-using SkillProfi_WebAPI.DATA;
+using SkillProfi_WebAPI.Classes;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using SkillProfi_WebAPI.Models.DBData;
 using System;
 
 namespace SkillProfi_WebAPI
@@ -19,7 +18,7 @@ namespace SkillProfi_WebAPI
                 try
                 {
                     var context = services.GetRequiredService<SkillProfiContext>();
-                    SampleSkillProfiData.Initialize(context);
+                    SampleSkillProfi.Initialize(context);
                 }
                 catch (Exception ex)
                 {

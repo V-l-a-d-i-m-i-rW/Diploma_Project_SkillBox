@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SkillProfi_Shared;
+using SkillProfi_WebSite.Classes;
 using SkillProfi_WebSite.Interfaces;
 using SkillProfi_WebSite.Models;
 using System;
@@ -12,8 +13,8 @@ namespace SkillProfi_WebSite.Controllers
     [Authorize(Roles = "administrator")]
     public class BidDataController : Controller
     {
-        private readonly ISkillProfiData data;
-        public BidDataController(ISkillProfiData data)//(,ILogger<HomeController> logger,
+        private readonly ISkillProfi data;
+        public BidDataController(ISkillProfi data)//(,ILogger<HomeController> logger,
         {
             //_logger = logger;
             this.data = data;
@@ -44,7 +45,7 @@ namespace SkillProfi_WebSite.Controllers
             }
             catch (Exception ex)
             {
-                return View("Error", ex.InnerException?.Message ?? ex.Message);
+                return ExceptionView.View(ex, this);
             }
         }
 
@@ -62,7 +63,7 @@ namespace SkillProfi_WebSite.Controllers
             }
             catch (Exception ex)
             {
-                return View("Error", ex.InnerException?.Message ?? ex.Message);
+                return ExceptionView.View(ex, this);
             }
         }
         #endregion
@@ -84,7 +85,7 @@ namespace SkillProfi_WebSite.Controllers
             }
             catch (Exception ex)
             {
-                return View("Error", ex.InnerException?.Message ?? ex.Message);
+                return ExceptionView.View(ex, this);
             }
         }
         /// <summary>
@@ -108,7 +109,7 @@ namespace SkillProfi_WebSite.Controllers
             }
             catch (Exception ex)
             {
-                return View("Error", ex.InnerException?.Message ?? ex.Message);
+                return ExceptionView.View(ex, this);
             }
         }
 
@@ -128,7 +129,7 @@ namespace SkillProfi_WebSite.Controllers
             }
             catch (Exception ex)
             {
-                return View("Error", ex.InnerException?.Message ?? ex.Message);
+                return ExceptionView.View(ex, this);
             }
         }
 
@@ -148,7 +149,7 @@ namespace SkillProfi_WebSite.Controllers
             }
             catch (Exception ex)
             {
-                return View("Error", ex.InnerException?.Message ?? ex.Message);
+                return ExceptionView.View(ex, this);
             }
         }
 
@@ -168,7 +169,7 @@ namespace SkillProfi_WebSite.Controllers
             }
             catch (Exception ex)
             {
-                return View("Error", ex.InnerException?.Message ?? ex.Message);
+                return ExceptionView.View(ex, this);
             }
         }
 
@@ -188,7 +189,7 @@ namespace SkillProfi_WebSite.Controllers
             }
             catch (Exception ex)
             {
-                return View("Error", ex.InnerException?.Message ?? ex.Message);
+                return ExceptionView.View(ex, this);
             }
         }
         /// <summary>
@@ -207,7 +208,7 @@ namespace SkillProfi_WebSite.Controllers
             }
             catch (Exception ex)
             {
-                return View("Error", ex.InnerException?.Message ?? ex.Message);
+                return ExceptionView.View(ex, this);
             }
         }
 
@@ -230,7 +231,7 @@ namespace SkillProfi_WebSite.Controllers
             }
             catch (Exception ex)
             {
-                return View("Error", ex.InnerException?.Message ?? ex.Message);
+                return ExceptionView.View(ex, this);
             }
         }
         #endregion
@@ -257,7 +258,7 @@ namespace SkillProfi_WebSite.Controllers
             }
             catch (Exception ex)
             {
-                return View("Error", ex.InnerException?.Message ?? ex.Message);
+                return ExceptionView.View(ex, this);
             }
         }
         /// <summary>
@@ -301,7 +302,7 @@ namespace SkillProfi_WebSite.Controllers
             }
             catch (Exception ex)
             {
-                return View("Error", ex.InnerException?.Message ?? ex.Message);
+                return ExceptionView.View(ex, this);
             }
         }
 

@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using SkillProfi_WebSite.Data;
+using SkillProfi_WebSite.Classes;
 using SkillProfi_WebSite.Interfaces;
 using SkillProfi_WebSite.UserAuthorization;
 using System;
@@ -27,7 +27,7 @@ namespace SkillProfi_WebSite
             string connection = Configuration.GetConnectionString("UserConnection");
             services.AddDbContext<ApplicationContext>(options => options.UseSqlServer(connection));
             //TODO: изменить
-            services.AddTransient<ISkillProfiData, WebAPISkillProfiData>();
+            services.AddTransient<ISkillProfi, WebAPISkillProfi>();
             services.AddControllersWithViews();  // добавляем сервисы MVC
 
             #region авторизация
