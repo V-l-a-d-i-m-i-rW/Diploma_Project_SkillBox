@@ -21,16 +21,6 @@ namespace SkillProfi_WebAPI.Classes
                 context?.DataBidPage.Add(new BidPageData());
                 isChange = true;
             }
-            if (!context?.DataBidPage?.Any() ?? false)
-            {
-                context?.DataBidPage.Add(new BidPageData());
-                isChange = true;
-            }
-            if (!context?.Contacts?.Any() ?? false)
-            {
-                context?.Contacts.Add(new Contact());
-                isChange = true;
-            }
             if (!context?.Contacts?.Any() ?? false)
             {
                 context?.Contacts.Add(new Contact());

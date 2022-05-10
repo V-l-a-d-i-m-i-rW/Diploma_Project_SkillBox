@@ -5,7 +5,6 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:i="clr-namespace:SkillProfi_WPFClient.Classes"
         xmlns:gl="clr-namespace:System.Globalization;assembly=mscorlib"
-        xmlns:local="clr-namespace:SkillProfi_WPFClient"
         mc:Ignorable="d"
         Title="SkillProfi клиент" 
         WindowStartupLocation="CenterScreen"
