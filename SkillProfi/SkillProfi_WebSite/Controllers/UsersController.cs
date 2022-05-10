@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using SkillProfi_WebSite.Classes;
 using SkillProfi_WebSite.Interfaces;
 using SkillProfi_WebSite.UserAuthorization;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -24,8 +26,15 @@ namespace SkillProfi_WebSite.Controllers
 
         public async Task<IActionResult> Index() 
         {
-            await data.SetGeneralDataInViewDataDictionaryAsync(ViewData, User.IsInRole("administrator")); 
-            return View("UsersList", _userManager?.Users?.ToList());
+            try
+            {
+                await data.SetGeneralDataInViewDataDictionaryAsync(ViewData, User.IsInRole("administrator"));
+                return View("UsersList", _userManager?.Users?.ToList());
+            }
+            catch (Exception ex)
+            {
+                return ExceptionView.View(ex, this);
+            }
         }
            
 

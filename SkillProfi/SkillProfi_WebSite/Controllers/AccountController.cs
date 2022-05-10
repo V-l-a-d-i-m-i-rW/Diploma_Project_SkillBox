@@ -1,7 +1,9 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using SkillProfi_WebSite.Classes;
 using SkillProfi_WebSite.Interfaces;
 using SkillProfi_WebSite.UserAuthorization;
 
@@ -32,8 +34,15 @@ namespace SkillProfi_WebSite.Controllers
         [Authorize(Roles = "administrator")]
         public async Task<IActionResult> Register()
         {
-            await data.SetGeneralDataInViewDataDictionaryAsync(ViewData, User.IsInRole("administrator"));
-            return View("Register", new UserRegistration());
+            try
+            {
+                await data.SetGeneralDataInViewDataDictionaryAsync(ViewData, User.IsInRole("administrator"));
+                return View("Register", new UserRegistration());
+            }
+            catch (Exception ex)
+            {
+                return ExceptionView.View(ex, this);
+            }
         }
 
         /// <summary>
@@ -46,32 +55,39 @@ namespace SkillProfi_WebSite.Controllers
         [Authorize(Roles = "administrator")]
         public async Task<IActionResult> Register(UserRegistration model)
         {
-            if (ModelState.IsValid)
+            try
             {
+                if (ModelState.IsValid)
+                {
 
-                var user = new User { UserName = model.LoginUser };
-                // добавляем пользователя
-                var createResult = await _userManager.CreateAsync(user, model.Password);
-                //если пользователь удачно добавлен
-                if (createResult.Succeeded)
-                {
-                    //установкароли пользователь
-                    await _userManager.AddToRoleAsync(user, RoleInitializer.RoleAdmin);
-                    // установка куки
-                    //await _signInManager.SignInAsync(user, false);
-                   // _ = await data.SetGeneralDataAndGetMenuAsync(ViewData);
-                    return RedirectToAction("Index", "Users");
-                }
-                else//иначе
-                {
-                    foreach (var identityError in createResult.Errors) 
+                    var user = new User { UserName = model.LoginUser };
+                    // добавляем пользователя
+                    var createResult = await _userManager.CreateAsync(user, model.Password);
+                    //если пользователь удачно добавлен
+                    if (createResult.Succeeded)
                     {
-                        ModelState.AddModelError("", identityError.Description);
+                        //установкароли пользователь
+                        await _userManager.AddToRoleAsync(user, RoleInitializer.RoleAdmin);
+                        // установка куки
+                        //await _signInManager.SignInAsync(user, false);
+                        // _ = await data.SetGeneralDataAndGetMenuAsync(ViewData);
+                        return RedirectToAction("Index", "Users");
+                    }
+                    else//иначе
+                    {
+                        foreach (var identityError in createResult.Errors)
+                        {
+                            ModelState.AddModelError("", identityError.Description);
+                        }
                     }
                 }
+                await data.SetGeneralDataInViewDataDictionaryAsync(ViewData, User.IsInRole("administrator"));
+                return View(model);
             }
-            await data.SetGeneralDataInViewDataDictionaryAsync(ViewData, User.IsInRole("administrator"));
-            return View(model);
+            catch (Exception ex)
+            {
+                return ExceptionView.View(ex, this);
+            }
         }
 
 
@@ -86,41 +102,54 @@ namespace SkillProfi_WebSite.Controllers
         [HttpGet]
         public async Task<IActionResult> Login(string returnUrl)
         {
-            await data.SetGeneralDataInViewDataDictionaryAsync(ViewData, User.IsInRole("administrator"));
-            //log.LogWarning($" ------- \n >> Login(string returnUrl) сработал, returnUrl = {returnUrl}\n ------- \n ");
-            return View(new UserLogin()
+            try
             {
-                ReturnUrl = returnUrl
-            });
+                await data.SetGeneralDataInViewDataDictionaryAsync(ViewData, User.IsInRole("administrator"));
+                //log.LogWarning($" ------- \n >> Login(string returnUrl) сработал, returnUrl = {returnUrl}\n ------- \n ");
+                return View(new UserLogin()
+                {
+                    ReturnUrl = returnUrl
+                });
+            }
+            catch (Exception ex)
+            {
+                return ExceptionView.View(ex, this);
+            }
         }
 
         [HttpPost, ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(UserLogin model)
         {
-           
-            if (ModelState.IsValid)
+            try
             {
-                var loginResult = await _signInManager.PasswordSignInAsync(model.LoginUser,
-                    model.Password,
-                    false,
-                    lockoutOnFailure: false);
-
-                if (loginResult.Succeeded)
+                if (ModelState.IsValid)
                 {
-                    
-                    // проверяем, принадлежит ли URL приложению
-                    if (!string.IsNullOrEmpty(model.ReturnUrl) && Url.IsLocalUrl(model.ReturnUrl))
+                    var loginResult = await _signInManager.PasswordSignInAsync(model.LoginUser,
+                        model.Password,
+                        false,
+                        lockoutOnFailure: false);
+
+                    if (loginResult.Succeeded)
                     {
-                        return Redirect(model.ReturnUrl);
+
+                        // проверяем, принадлежит ли URL приложению
+                        if (!string.IsNullOrEmpty(model.ReturnUrl) && Url.IsLocalUrl(model.ReturnUrl))
+                        {
+                            return Redirect(model.ReturnUrl);
+                        }
+
+                        return RedirectToAction("Index", "BidData");
                     }
 
-                    return RedirectToAction("Index", "BidData");
                 }
-
+                await data.SetGeneralDataInViewDataDictionaryAsync(ViewData, User.IsInRole("administrator"));
+                ModelState.AddModelError("", "Неправильный логин и (или) пароль");
+                return View(model);
             }
-            await data.SetGeneralDataInViewDataDictionaryAsync(ViewData, User.IsInRole("administrator"));
-            ModelState.AddModelError("", "Неправильный логин и (или) пароль");
-            return View(model);
+            catch (Exception ex)
+            {
+                return ExceptionView.View(ex, this);
+            }
         }
 
     }
