@@ -14,13 +14,27 @@ namespace SkillProfi_WebSite.Classes
         {
             if (controller != null && ex != null)
             {
-                string exception_string = ex switch
+                string exception_string;
+                switch(ex)
                 {
-                    InvalidOperationException => $"Ошибка URI.\n{ex.InnerException?.Message ?? ex.Message}",
-                    System.Net.Http.HttpRequestException => $"Ошибка выполнения запроса.\n{ex.InnerException?.Message ?? ex.Message}",
-                    TaskCanceledException => $"Отмена выполнения задачи.\n{ex.InnerException?.Message ?? ex.Message}",
-                    Newtonsoft.Json.JsonSerializationException => $"Ошибка преобазования данных.\n{ex.InnerException?.Message ?? ex.Message}",
-                    _ => throw ex,
+                    case InvalidOperationException:
+                        exception_string = $"Ошибка URI.\n{ex.InnerException?.Message ?? ex.Message}";
+                        break;
+                    case System.Net.Http.HttpRequestException:
+                        string err = "Ошибка выполнения запроса.\n";
+                        if (((System.Net.Http.HttpRequestException)ex)?.StatusCode >= System.Net.HttpStatusCode.InternalServerError)
+                            exception_string = $"{err}Внутренняя ошибка сервера.";
+                        else
+                            exception_string = $"{err}{ex.InnerException?.Message ?? ex.Message}";
+                        break;
+                    case TaskCanceledException:
+                        exception_string = $"Отмена выполнения задачи.\n{ex.InnerException?.Message ?? ex.Message}";
+                        break;
+                    case Newtonsoft.Json.JsonSerializationException:
+                        exception_string = $"Ошибка преобазования данных.\n{ex.InnerException?.Message ?? ex.Message}";
+                        break;
+                    default:
+                        throw ex;
                 };
                 return controller.View("Error", exception_string);
             }

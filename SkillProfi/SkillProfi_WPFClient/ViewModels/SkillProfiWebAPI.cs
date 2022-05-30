@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
@@ -414,7 +415,11 @@ namespace SkillProfi_WPFClient.ViewModels
                         OnErrorMessage($"Ошибка URI.\n{ex.InnerException?.Message ?? ex.Message}");
                         break;
                     case HttpRequestException:
-                        OnErrorMessage($"Ошибка выполнения запроса.\n{ex.InnerException?.Message ?? ex.Message}");
+                        string err = "Ошибка выполнения запроса.\n";
+                        if (((HttpRequestException)ex)?.StatusCode >= HttpStatusCode.InternalServerError)
+                            OnErrorMessage($"{err}Внутренняя ошибка сервера.");
+                        else
+                            OnErrorMessage($"{err}{ex.InnerException?.Message ?? ex.Message}");
                         break;
                     case TaskCanceledException:
                         OnErrorMessage($"Отмена выполнения задачи.\n{ex.InnerException?.Message ?? ex.Message}");
